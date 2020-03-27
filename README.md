@@ -18,8 +18,10 @@ A Chrome extension to show important COVID-19 global and local information.
 - Chrome Store Preparation: Description, Screenshots, App Icon
 
 
+PRIMARY API: https://thevirustracker.com/api
+Secondary: https://api.covid19api.com/summary
+
 Potential APIs
 - GraphQL: https://covidtracking.com/api/playground
 - GraphQL: https://covid19-graphql.now.sh/
-
-- REST: https://api.covid19api.com/summary
+- REST: https://thevirustracker.com/free-api?countryTotal=US
