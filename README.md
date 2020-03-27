@@ -16,3 +16,10 @@ A Chrome extension to show important COVID-19 global and local information.
   - PREFERENCE: Select which numbers to show
   - PREFERENCE: Top Countries or Countries Selected by User
 - Chrome Store Preparation: Description, Screenshots, App Icon
+
+
+Potential APIs
+- GraphQL: https://covidtracking.com/api/playground
+- GraphQL: https://covid19-graphql.now.sh/
+
+- REST: https://api.covid19api.com/summary
