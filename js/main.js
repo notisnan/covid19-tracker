@@ -12,6 +12,19 @@ function toggleForm() {
   countryForm.classList.toggle('country-form--active');
 }
 
+// --------------------------------+
+// Initializing the Refresh Button |
+// --------------------------------+
+
+const refreshButton = document.querySelector('.button-refresh');
+refreshButton.addEventListener('click', refreshUI);
+
+function refreshUI() {
+  console.log('REFRESH');
+  refreshCountryData();
+  rebuildTable();
+}
+
 // ----------------------+
 // Fetching country data |
 // ----------------------+
@@ -156,6 +169,19 @@ function activateDeleteButtons() {
 function createRow(country) {
   const div = document.createElement('div');
   div.classList.add('country');
+  let percentageChangeConfirmed = country.total_new_cases_today/country.total_cases;
+  if (isNaN(percentageChangeConfirmed)) {
+    percentageChangeConfirmed = "0.00";
+  } else {
+    percentageChangeConfirmed = (percentageChangeConfirmed * 100).toFixed(2);
+  }
+  let percentageChangeDead = country.total_new_deaths_today/country.total_deaths;
+  if (isNaN(percentageChangeDead)) {
+    percentageChangeDead = "0.00";
+  } else {
+    percentageChangeDead = (percentageChangeDead * 100).toFixed(2);
+  }
+
   div.innerHTML = `
     <button class="remove-country" data-ourid="${country.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
@@ -166,12 +192,12 @@ function createRow(country) {
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(country.total_cases)}</div>
-      <div class="statistic__change">+${((country.total_new_cases_today/country.total_cases)*100).toFixed(2)}%</div>
+      <div class="statistic__change">+${percentageChangeConfirmed}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
       <div class="statistic__count">${formatNumber(country.total_deaths)}</div>
-      <div class="statistic__change">+${((country.total_new_deaths_today/country.total_deaths)*100).toFixed(2)}%</div>
+      <div class="statistic__change">+${percentageChangeDead}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
