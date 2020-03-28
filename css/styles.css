@@ -30,7 +30,7 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 460px;
+  min-width: 470px;
 }
 
 .app__footer {
@@ -284,9 +284,10 @@ button {
 }
 
 .country-form__button {
-  background: #43cea1;
+  background: #47c293;
   border-radius: 5px;
   font-size: 12px;
+  font-weight: 500;
   color: #121629;
   border: 0;
   padding: 9px 16px;
