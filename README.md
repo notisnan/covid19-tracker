@@ -9,10 +9,11 @@ A Chrome extension to show important COVID-19 global and local information.
 ## Features
 - Ability to customize countries.
 - Data is refreshed automatically and can be refreshed on-demand.
+- Initialized with the top five countries with highest confirmed cases.
 
 ## Technical Details
-- Using data from the [virustracker](https://thevirustracker.com/api).
-- Usage of Sync Storage
+- Consuming the JSON data from the [virustracker](https://thevirustracker.com/api) API.
+- Usage of Sync Storage for user country preferences.
 
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
 
