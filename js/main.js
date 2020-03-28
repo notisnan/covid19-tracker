@@ -55,21 +55,44 @@ function createRow(country) {
     <div class="country__name">${country.title}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
-      <div class="statistic__count">${country.total_cases}<span>k</span></div>
+      <div class="statistic__count">${formatNumber(country.total_cases)}</div>
       <div class="statistic__change">+${((country.total_new_cases_today/country.total_cases)*100).toFixed(2)}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
-      <div class="statistic__count">${country.total_deaths}<span>k</span></div>
+      <div class="statistic__count">${formatNumber(country.total_deaths)}</div>
       <div class="statistic__change">+${((country.total_new_deaths_today/country.total_deaths)*100).toFixed(2)}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
-      <div class="statistic__count">${country.total_recovered}<span>k</span></div>
+      <div class="statistic__count">${formatNumber(country.total_recovered)}</div>
       <div class="statistic__change"></div>
     </div>
   `;
   return div;
+}
+
+// Write a function that formatNumber(number) 
+// 1. check if the value < 1000 => return value
+// 2. check if the value < 1,000,000 => 746,543 -> remove last 2 digits, dot after last remaining digit + 'k' in a span
+// 3. check if the value < 1,000,000,000 -> remove last 5 digits, dot after last remaining digit + 'm' in a span
+// 4. return the string
+function formatNumber(number) {
+  if (number < 1000) {
+    return number;
+  }
+  if (number < 1000000) {
+    const preDigit = String(number).split('');
+    preDigit.splice(-2);
+    preDigit.splice(preDigit.length-1, 0, '.');
+    preDigit.push('<span>k</span>');
+    return preDigit.join('');
+  }
+  const preDigit = String(number).split('');
+  preDigit.splice(-5);
+  preDigit.splice(preDigit.length-1, 0, '.');
+  preDigit.push('<span>m</span>');
+  return preDigit.join('');
 }
 
 
