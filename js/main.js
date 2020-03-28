@@ -12,11 +12,12 @@ function toggleForm() {
   countryForm.classList.toggle('country-form--active');
 }
 
-// --------------------------
-// Fetching country data
-// --------------------------
+// ----------------------+
+// Fetching country data |
+// ----------------------+
+
 let countryObj = {};
-let topFiveCountries = [];
+let myCountries = [];
 let countriesContainer = document.querySelector('.countries');
 
 fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
@@ -27,22 +28,42 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
   for (let [key, value] of Object.entries(data.countryitems[0])) {
     countryObj[value.title] = value;
   }
-  topFiveCountries = topFive(countryObj);
+  //TODO: local storage check of myCountries
+  // if myCountries doesnt exit call topFive
+
+  myCountries = topFive(countryObj);
   // loop over top fiove countries
-  for (let country of topFiveCountries) {
-    // for each country create a row element with all data populated - invoke the createRow(country)
-    // append that row to the countries element
-    countriesContainer.appendChild(createRow(country));
-  }
+  rebuildTable();
 });
 
-  // define a function that takes an object 
-  // and in this function [createRow] return an element - that has all the data populated
-  // 1. create a new div
-  // 2. assign a class to that div element > country
-  // 3. set the InnerHTML of this element to the structure of that row 
-  // 4. Inside that structure replace all values from our object
-  // 5. return this element
+// --------------------
+// Adding new countries 
+// --------------------
+
+// Get a reference to our input and button elements
+// add an event listener to the button element
+// on click extract value from the input
+// define new function to match country string
+// if we have a match - return country Object
+// create a new row (countryObject)
+// append new country object to myCountries - then sort
+// clear input field
+// call rebuildTable
+
+// --------------------------------
+// Rebuilds the UI - Countries List 
+// --------------------------------
+
+function rebuildTable() {
+  let element = "";
+  for (let country of myCountries) element+=createRow(country).outerHTML;
+  countriesContainer.innerHTML=element;
+}
+
+// -------------------------
+// Create a New Country Road 
+// -------------------------
+
 function createRow(country) {
   const div = document.createElement('div');
   div.classList.add('country');
@@ -72,11 +93,10 @@ function createRow(country) {
   return div;
 }
 
-// Write a function that formatNumber(number) 
-// 1. check if the value < 1000 => return value
-// 2. check if the value < 1,000,000 => 746,543 -> remove last 2 digits, dot after last remaining digit + 'k' in a span
-// 3. check if the value < 1,000,000,000 -> remove last 5 digits, dot after last remaining digit + 'm' in a span
-// 4. return the string
+// ----------------------------
+// HELPER: format number for UI 
+// ----------------------------
+
 function formatNumber(number) {
   if (number < 1000) {
     return number;
@@ -95,9 +115,10 @@ function formatNumber(number) {
   return preDigit.join('');
 }
 
+// --------------------------------------------------------
+// HELPER: returns the smallest element of the passed array 
+// --------------------------------------------------------
 
-// define a function [smallestValue] to find the smallest item 
-// in smallestCountries object
 function getSmallestValue(countries) {
   let smallest = countries[0];
   for (let country of countries) {
@@ -106,14 +127,14 @@ function getSmallestValue(countries) {
   return smallest;
 }
 
+// --------------------------------------------------------
+// Acquire the top five countries to initiate the extension 
+// --------------------------------------------------------
+
 function topFive(countries) {    
-  // declare an array of objects - smallestCountries
   const sampleCountry = countries["Botswana"];
   const mostCasesArray = [sampleCountry, sampleCountry, sampleCountry, sampleCountry, sampleCountry];
-  // iterate thru parameter: countryObj
   for (let key in countries) {  
-    // select total cases of current iterated element in order
-    // to compare to smallest cases in smallestCountries by calling smallestValue
     const leastCase = getSmallestValue(mostCasesArray);
     if (leastCase.total_cases < countries[key].total_cases) {
       const indexOfLeastCase = mostCasesArray.indexOf(leastCase);
@@ -126,5 +147,4 @@ function topFive(countries) {
   });
 }
 
-
-
+// -------------------------------------------------------
