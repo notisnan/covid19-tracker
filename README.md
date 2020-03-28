@@ -1,4 +1,5 @@
 # COVID19 Tracker
+![](art/.png?raw=true)
 A Chrome extension to show important COVID-19 global and local information.
 
 [Available on the Chrome Store](https://chrome.google.com/webstore/detail/dccmmkjdbpdlcallijclmjkhmpciajdj/).
@@ -13,3 +14,8 @@ A Chrome extension to show important COVID-19 global and local information.
 - Using data from the [virustracker](https://thevirustracker.com/api).
 - Usage of Sync Storage
 
+This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
+
+We hope it brings awareness to the dangers of pandemic events to human civilization and the need to prepare.
+
+See [TED Talk: The Next Pandemic, we are not ready (Bill Gates).](https://www.youtube.com/watch?v=6Af6b_wyiwI)
