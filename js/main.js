@@ -1,17 +1,3 @@
-// --------------------------
-// Show/Hide add country form
-// --------------------------
-
-const revealCountryFormButton = document.querySelector('.button-add-country');
-const countryForm = document.querySelector('.country-form');
-
-revealCountryFormButton.addEventListener('click', toggleForm);
-
-function toggleForm() {
-  this.classList.toggle('button-add-country--active');
-  countryForm.classList.toggle('country-form--active');
-}
-
 // --------------------------------+
 // Initializing the Refresh Button |
 // --------------------------------+
