@@ -36,16 +36,27 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
 // ------------------------------------------------
 
 function initializeState() {
-  chrome.storage.local.get('myCountries', function (result) {
+  chrome.storage.sync.get('myCountries', function (result) {
     if (!result.myCountries) {
       myCountries = topFive(countryObj);
-      chrome.storage.local.set({ 'myCountries': myCountries });
+      chrome.storage.sync.set({ 'myCountries': myCountries });
     }
     else {
       myCountries = result.myCountries;
+      refreshCountryData();
     }
     rebuildTable();
   });
+}
+
+// ---------------------------
+// Refresh Country Data 
+// ---------------------------
+
+function refreshCountryData() {
+  for (let i = 0; i < myCountries.length; i++) {
+    myCountries[i] = countryObj[myCountries[i].title.toLowerCase()];
+  }
 }
 
 // ---------------------------
@@ -78,7 +89,7 @@ function addCountry(e) {
   }
   else if (newCountry) {
     myCountries.push(newCountry);
-    sortCountries(myCountries);
+    chrome.storage.sync.set({ 'myCountries': myCountries });
     rebuildTable();
     addCountryInput.value = "";
   }
@@ -103,6 +114,7 @@ function findCountry(country) {
 
 function rebuildTable() {
   let element = "";
+  sortCountries(myCountries);
   for (let country of myCountries) element+=createRow(country).outerHTML;
   countriesContainer.innerHTML=element;
   activateDeleteButtons();
@@ -116,7 +128,7 @@ function deleteCountry(countryKey) {
   for (let i=0; i < myCountries.length; i++) {
     if (myCountries[i].ourid === Number(countryKey)) {
       myCountries.splice(i, 1);
-      sortCountries(myCountries);
+      chrome.storage.sync.set({ 'myCountries': myCountries });
       rebuildTable();
       return;
     }
@@ -219,7 +231,7 @@ function topFive(countries) {
     }
   }
 
-  return sortCountries(mostCasesArray);
+  return mostCasesArray;
 }
 
 // ------------------------------
