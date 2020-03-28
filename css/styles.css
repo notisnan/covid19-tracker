@@ -1,0 +1,319 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 10px 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-family: 'Roboto', sans-serif;
+}
+
+button {
+  outline: none;
+}
+
+.app {
+  background: #0e1120;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 18px 20px 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__footer {
+  display: flex;
+}
+
+/* ------- */
+/* Buttons */
+/* ------- */
+
+.remove-country {
+  position: absolute;
+  bottom: 12px;
+  left: -20px;
+  width: 26px;
+  height: 24px;
+  background: #ff4384;
+  border: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.country:hover .remove-country {
+  opacity: 1;
+}
+
+.remove-country svg {
+  fill: #121629;
+  width: 10px;
+  height: 10px;
+}
+
+.options {
+  display: flex;
+  margin: 2px 10px 2px auto;
+}
+
+.button-refresh,
+.button-preferences {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.button-preferences {
+  margin-left: 16px;
+}
+
+.button-refresh svg,
+.button-preferences svg {
+  width: 20px;
+  height: 20px;
+  fill: #808aa2;
+  transition: fill 0.2s;
+}
+
+.button-refresh:hover svg,
+.button-preferences:hover svg {
+  fill: #a2afcd;
+}
+
+.button-add-country {
+  position: absolute;
+  bottom: 10px;
+  left: -5px;
+  width: 48px;
+  height: 27px;
+  background: #717b91;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 20px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.button-add-country--active {
+  background: #ff4384;
+}
+
+.button-add-country:hover {
+  background: #a2afcd;
+}
+
+.button-add-country--active:hover {
+  background: #ff0058;
+}
+
+.button-add-country svg {
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  fill: #121629;
+  transition: transform 0.2s;
+}
+
+.button-add-country--active svg {
+  transform: rotate(0deg);
+}
+
+.button-add-country::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-bottom: 3px solid #545a6a;
+  border-left: 5px solid transparent;
+  position: absolute;
+  top: -3px;
+  left: 0;
+}
+
+/* ------ */
+/* Header */
+/* ------ */
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+  margin-right: 10px;
+}
+
+.header__item {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  padding-left: 20px;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.header__item svg {
+  fill: #545a6a;
+  width: 10px;
+  margin-left: 5px;
+}
+
+.header__item--up svg {
+  transform: rotate(180deg);
+}
+
+.header__item--down {
+  
+}
+
+.header__item--active svg {
+  fill: #f2d658;
+}
+
+.header__item--confirmed { color: #f4943e; }
+.header__item--deaths { color: #fa502f; }
+.header__item--recovered { color: #36d3da; }
+
+/* Match the headers  */
+.column-confirmed { width: 104px; }
+.column-deaths { width: 100px; }
+.column-recovered { width: 104px; }
+
+/* ------------ */
+/* Country list */
+/* ------------ */
+
+.countries {
+
+}
+
+.country {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #252a3d;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 25px;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.country:hover {
+  background: #30364f;
+  cursor: grab;
+}
+
+.country__name {
+  color: #ffddb7;
+  font-size: 15px;
+  letter-spacing: 0.025em;
+  padding: 10px 20px;
+  margin-top: 2px;
+  margin-right: auto;
+}
+
+.statistic {
+  border-right: 1px solid #000000;
+  text-align: right;
+  padding: 10px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.statistic:last-child {
+  border-right: 0;
+}
+
+.statistic__count {
+  color: #ffffff;
+  font-size: 17px;
+  letter-spacing: 0.025em;
+  position: relative;
+}
+
+.statistic__count span {
+  color: #b3c1ff;
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  margin-left: 2px;
+}
+
+.statistic__change {
+  color: #808aa2;
+  font-size: 11px;
+  letter-spacing: 0.025em;
+  min-height: 13px;
+}
+
+
+.column-recovered .statistic__count::after {
+  content: '';
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #494e5c;
+}
+
+/* ---------------- */
+/* Add country form */
+/* ---------------- */
+
+.country-form {
+  margin-left: 35px;
+  display: none;
+}
+
+.country-form--active {
+  display: block;
+}
+
+.country-form__input {
+  background: #252a3d;
+  border: 1px solid #535969;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  padding: 4px 9px;
+  outline: none;
+}
+
+.country-form__button {
+  background: #43cea1;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #121629;
+  border: 0;
+  padding: 5px 16px;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.country-form__button:hover {
+  background: #53ffc7;
+}
