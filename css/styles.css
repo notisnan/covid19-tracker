@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  margin: 10px 40px;
+  margin: 0px 0px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
@@ -21,10 +21,10 @@ button {
 
 .app {
   background: #0e1120;
-  border-top-left-radius: 30px;
+  /* border-top-left-radius: 30px;
   border-bottom-right-radius: 30px;
   border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 10px; */
   padding: 18px 20px 10px;
   position: relative;
   display: flex;
