@@ -30,11 +30,10 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
       countryObj[value.title.toLowerCase()] = value;
     }    
   }
-  //TODO: local storage check of myCountries
+  // TODO: local storage check of myCountries
   // if myCountries doesnt exit call topFive
 
   myCountries = topFive(countryObj);
-  // loop over top fiove countries
   rebuildTable();
 });
 
@@ -81,6 +80,36 @@ function rebuildTable() {
   let element = "";
   for (let country of myCountries) element+=createRow(country).outerHTML;
   countriesContainer.innerHTML=element;
+  activateDeleteButtons();
+}
+
+// ----------------
+// Delete a Country
+// ----------------
+
+function deleteCountry(countryKey) {
+  for (let i=0; i < myCountries.length; i++) {
+    if (myCountries[i].ourid === Number(countryKey)) {
+      myCountries.splice(i, 1);
+      sortCountries(myCountries);
+      rebuildTable();
+      return;
+    }
+  }
+  console.log('Country is gone.');
+}
+
+// -----------------------------------------------------------------
+// Activate the event listeners for the delete country functionality 
+// -----------------------------------------------------------------
+
+function activateDeleteButtons() {
+  const deleteButtons = document.querySelectorAll('.remove-country');
+  for (let button of [...deleteButtons]) {
+    button.addEventListener('click', () => {
+      deleteCountry(button.getAttribute('data-ourid'));
+    });
+  }
 }
 
 // -------------------------
@@ -91,7 +120,7 @@ function createRow(country) {
   const div = document.createElement('div');
   div.classList.add('country');
   div.innerHTML = `
-    <button class="remove-country">
+    <button class="remove-country" data-ourid="${country.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
