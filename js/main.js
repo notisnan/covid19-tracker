@@ -25,17 +25,41 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
   return response.json();
 })
 .then((data) => {  
+  buildCountryObject(data);
+  initializeState();
+});
+
+// ------------------------------------------------
+// Initialize country array based on local storage 
+    // TESTING OF LOCAL STORAGE
+    // chrome.storage.local.remove('myCountries');
+// ------------------------------------------------
+
+function initializeState() {
+  chrome.storage.local.get('myCountries', function (result) {
+    if (!result.myCountries) {
+      myCountries = topFive(countryObj);
+      chrome.storage.local.set({ 'myCountries': myCountries });
+    }
+    else {
+      myCountries = result.myCountries;
+    }
+    rebuildTable();
+  });
+}
+
+// ---------------------------
+// Build up the Country Object 
+// ---------------------------
+
+function buildCountryObject(data) {
+  // key = Country Names, values = Country Object
   for (let [key, value] of Object.entries(data.countryitems[0])) {
     if (value.title) {
       countryObj[value.title.toLowerCase()] = value;
-    }    
+    }
   }
-  // TODO: local storage check of myCountries
-  // if myCountries doesnt exit call topFive
-
-  myCountries = topFive(countryObj);
-  rebuildTable();
-});
+}
 
 // --------------------
 // Adding new countries 
@@ -46,8 +70,9 @@ const addCountryButton = document.querySelector('.country-form__button');
 
 addCountryButton.addEventListener('click', addCountry);
 
-function addCountry() {
+function addCountry(e) {
   const newCountry = findCountry(addCountryInput.value);
+  e.preventDefault();
   if (myCountries.includes(newCountry)) {
     console.log('There\'s already an old man in my country.');
   }
