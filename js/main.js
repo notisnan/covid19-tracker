@@ -2,10 +2,10 @@
 // Show/Hide add country form
 // --------------------------
 
-const addCountryButton = document.querySelector('.button-add-country');
+const revealCountryFormButton = document.querySelector('.button-add-country');
 const countryForm = document.querySelector('.country-form');
 
-addCountryButton.addEventListener('click', toggleForm);
+revealCountryFormButton.addEventListener('click', toggleForm);
 
 function toggleForm() {
   this.classList.toggle('button-add-country--active');
@@ -26,7 +26,9 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
 })
 .then((data) => {  
   for (let [key, value] of Object.entries(data.countryitems[0])) {
-    countryObj[value.title] = value;
+    if (value.title) {
+      countryObj[value.title.toLowerCase()] = value;
+    }    
   }
   //TODO: local storage check of myCountries
   // if myCountries doesnt exit call topFive
@@ -40,15 +42,36 @@ fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
 // Adding new countries 
 // --------------------
 
-// Get a reference to our input and button elements
-// add an event listener to the button element
-// on click extract value from the input
-// define new function to match country string
-// if we have a match - return country Object
-// create a new row (countryObject)
-// append new country object to myCountries - then sort
-// clear input field
-// call rebuildTable
+const addCountryInput = document.querySelector('.country-form__input');
+const addCountryButton = document.querySelector('.country-form__button');
+
+addCountryButton.addEventListener('click', addCountry);
+
+function addCountry() {
+  const newCountry = findCountry(addCountryInput.value);
+  if (myCountries.includes(newCountry)) {
+    console.log('There\'s already an old man in my country.');
+  }
+  else if (newCountry) {
+    myCountries.push(newCountry);
+    sortCountries(myCountries);
+    rebuildTable();
+    addCountryInput.value = "";
+  }
+  else console.log('No country for old men.')
+}
+
+// -----------------------------------------------------------------------
+// Returns matched country
+// Additionally - acts as a fail safe for user who mistypes a country name 
+// -----------------------------------------------------------------------
+
+function findCountry(country) {
+  if (countryObj.hasOwnProperty(country.toLowerCase())) {
+    return countryObj[country.toLowerCase()];
+  }
+  // TODO: check alternate country spelling object as a fail safe
+}
 
 // --------------------------------
 // Rebuilds the UI - Countries List 
@@ -132,7 +155,7 @@ function getSmallestValue(countries) {
 // --------------------------------------------------------
 
 function topFive(countries) {    
-  const sampleCountry = countries["Botswana"];
+  const sampleCountry = countries["botswana"]; 
   const mostCasesArray = [sampleCountry, sampleCountry, sampleCountry, sampleCountry, sampleCountry];
   for (let key in countries) {  
     const leastCase = getSmallestValue(mostCasesArray);
@@ -142,9 +165,16 @@ function topFive(countries) {
     }
   }
 
-  return mostCasesArray.sort((a,b) => {
-    return b.total_cases - a.total_cases;  
-  });
+  return sortCountries(mostCasesArray);
 }
 
+// ------------------------------
+// HELPER: Sort the Country Array 
+// ------------------------------
+
+function sortCountries(array) {
+  return array.sort((a, b) => {
+    return b.total_cases - a.total_cases;
+  });
+}
 // -------------------------------------------------------
