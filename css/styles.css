@@ -91,7 +91,12 @@ button {
   width: 20px;
   height: 20px;
   fill: #808aa2;
-  transition: fill 0.2s;
+  transition: fill 0.2s, transform 0s;
+}
+
+.refreshing .button-refresh svg {
+  transition: fill 0.2s, transform 0.8s;
+  transform: rotate(360deg);
 }
 
 .button-refresh:hover svg {
@@ -191,7 +196,11 @@ button {
 /* ------------ */
 
 .countries {
+  transition: opacity 0.5s;
+}
 
+.refreshing .countries {
+  opacity: 0.5;
 }
 
 .country {

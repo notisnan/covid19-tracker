@@ -2,10 +2,14 @@
 // Initializing the Refresh Button |
 // --------------------------------+
 
+const app = document.querySelector('.app');
 const refreshButton = document.querySelector('.button-refresh');
 refreshButton.addEventListener('click', refreshUI);
 
 function refreshUI() {
+  app.classList.add('refreshing');
+  setTimeout(() => app.classList.remove('refreshing'), 800);
+
   console.log('REFRESH');
   refreshCountryData();
   rebuildTable();
