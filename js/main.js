@@ -47,7 +47,7 @@ updateData();
 // ------------------------------------------------
 // Initialize country array based on local storage 
     // TESTING OF LOCAL STORAGE
-    chrome.storage.local.remove('myCountries');
+    // chrome.storage.local.remove('myCountries');
 // ------------------------------------------------
 
 function initializeState() {
