@@ -64,6 +64,10 @@ button {
   opacity: 1;
 }
 
+.remove-country--hidden {
+  display: none;
+}
+
 .remove-country svg {
   fill: #121629;
   width: 10px;
@@ -158,7 +162,6 @@ button {
   padding-right: 14px;
   display: flex;
   justify-content: flex-end;
-  cursor: pointer;
 }
 
 .header__item--confirmed { color: #f4943e; }

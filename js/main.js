@@ -19,18 +19,30 @@ function refreshUI() {
 // Fetching country data |
 // ----------------------+
 
+let countryData = {};
+let worldData = {};
+// Old sructure, need to refactor
 let countryObj = {};
 let myCountries = [];
 let countriesContainer = document.querySelector('.countries');
 
-fetch('https://thevirustracker.com/free-api?countryTotals=ALL')
-.then((response) => {
-  return response.json();
-})
-.then((data) => {  
-  buildCountryObject(data);
-  initializeState();
-});
+function updateData() {
+  const fetchGlobalData = fetch('https://thevirustracker.com/free-api?global=stats').then(response => response.json());
+  const fetchCountryData = fetch('https://thevirustracker.com/free-api?countryTotals=ALL').then(response => response.json());
+
+  const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
+  fetchData.then(data => {
+    worldData = data[0].results[0];
+    countryData = data[1].countryitems[0];
+
+    // This will only trigger when both API requests return
+    // We can now continue to modify the app
+    buildCountryObject(countryData);
+    initializeState();
+  });
+}
+
+updateData();
 
 // ------------------------------------------------
 // Initialize country array based on local storage 
@@ -42,12 +54,15 @@ function initializeState() {
   chrome.storage.sync.get('myCountries', function (result) {
     if (!result.myCountries) {
       myCountries = topFive(countryObj);
+      myCountries.push(worldData);
       chrome.storage.sync.set({ 'myCountries': myCountries });
     }
     else {
       myCountries = result.myCountries;
+      myCountries.push(worldData);
       refreshCountryData();
     }
+    
     rebuildTable();
   });
 }
@@ -58,7 +73,9 @@ function initializeState() {
 
 function refreshCountryData() {
   for (let i = 0; i < myCountries.length; i++) {
-    myCountries[i] = countryObj[myCountries[i].title.toLowerCase()];
+    if (myCountries[i].title) {
+      myCountries[i] = countryObj[myCountries[i].title.toLowerCase()];
+    }
   }
 }
 
@@ -68,7 +85,7 @@ function refreshCountryData() {
 
 function buildCountryObject(data) {
   // key = Country Names, values = Country Object
-  for (let [key, value] of Object.entries(data.countryitems[0])) {
+  for (let [key, value] of Object.entries(data)) {
     if (value.title) {
       countryObj[value.title.toLowerCase()] = value;
     }
@@ -116,10 +133,15 @@ function findCountry(country) {
 // --------------------------------
 
 function rebuildTable() {
-  let element = "";
+  let rows = '';
+
   sortCountries(myCountries);
-  for (let country of myCountries) element+=createRow(country).outerHTML;
-  countriesContainer.innerHTML=element;
+  
+  for (let country of myCountries) {
+    rows += createRow(country).outerHTML;
+  }
+  
+  countriesContainer.innerHTML = rows;
   activateDeleteButtons();
 }
 
@@ -161,12 +183,12 @@ function createRow(country) {
   div.classList.add('country');
 
   div.innerHTML = `
-    <button class="remove-country" data-ourid="${country.ourid}">
+    <button class="${(country.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${country.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
     </button>
-    <div class="country__name">${country.title}</div>
+    <div class="country__name">${country.title || 'Global'}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(country.total_cases)}</div>
