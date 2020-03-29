@@ -59,7 +59,8 @@ function initializeState() {
     }
     else {
       myCountries = result.myCountries;
-      myCountries.push(worldData);
+      // update row 0 in order to update World Statistics
+      myCountries[0] = worldData;
       refreshCountryData();
     }
     
