@@ -261,7 +261,9 @@ button {
 /* Add country form */
 /* ---------------- */
 
-.country-form {}
+.country-form {
+  position: relative;
+}
 
 .country-form__input {
   background: #252a3d;
@@ -272,6 +274,8 @@ button {
   letter-spacing: 0.025em;
   padding: 8px 9px;
   outline: none;
+  z-index: 20;
+  position: relative;
 }
 
 .country-form__button {
@@ -289,4 +293,43 @@ button {
 
 .country-form__button:hover {
   background: #53ffc7;
+}
+
+.country-form__error {
+  background: #f1aa9b;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #101425;
+  padding: 10px 20px;
+  white-space: nowrap;
+  text-align: center;
+  z-index: 10;
+  /* Positioning it off screen allows us to animate the item in */
+  /* If you display none/block you won't be able to animate it */
+  position: absolute;
+  bottom: 9999px;
+  left: -9999px;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: left 0s ease 0.8s, bottom 0s ease 0.8s, opacity 0.2s, transform 0.2s;
+}
+
+.country-form--error .country-form__error {
+  bottom: calc(100% + 12px);
+  left: 0;
+  transform: translateY(0);
+  opacity: 1;
+  transition: left 0s ease 0s, bottom 0s ease 0s, transform 0.4s, opacity 0.4s;
+}
+
+.country-form__error::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid #f1aa9b;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
 }
