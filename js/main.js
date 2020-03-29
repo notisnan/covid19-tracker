@@ -159,18 +159,6 @@ function activateDeleteButtons() {
 function createRow(country) {
   const div = document.createElement('div');
   div.classList.add('country');
-  let percentageChangeConfirmed = country.total_new_cases_today/country.total_cases;
-  if (isNaN(percentageChangeConfirmed)) {
-    percentageChangeConfirmed = "0.00";
-  } else {
-    percentageChangeConfirmed = (percentageChangeConfirmed * 100).toFixed(2);
-  }
-  let percentageChangeDead = country.total_new_deaths_today/country.total_deaths;
-  if (isNaN(percentageChangeDead)) {
-    percentageChangeDead = "0.00";
-  } else {
-    percentageChangeDead = (percentageChangeDead * 100).toFixed(2);
-  }
 
   div.innerHTML = `
     <button class="remove-country" data-ourid="${country.ourid}">
@@ -182,12 +170,12 @@ function createRow(country) {
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(country.total_cases)}</div>
-      <div class="statistic__change">+${percentageChangeConfirmed}%</div>
+      <div class="statistic__change">+${calculatePercentage(country.total_new_cases_today, country.total_cases)}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
       <div class="statistic__count">${formatNumber(country.total_deaths)}</div>
-      <div class="statistic__change">+${percentageChangeDead}%</div>
+      <div class="statistic__change">+${calculatePercentage(country.total_new_deaths_today, country.total_deaths)}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
@@ -198,23 +186,69 @@ function createRow(country) {
   return div;
 }
 
+// -----------------------------------
+// HELPER: Calculate percentage change
+// -----------------------------------
+
+function calculatePercentage(casesToday, casesTotal) {
+  let percent = casesToday/casesTotal;
+  if (isNaN(percent)) {
+    return "0.00";
+  } else {
+    return (percent * 100).toFixed(2);
+  }
+}
+
 // ----------------------------
 // HELPER: format number for UI 
 // ----------------------------
 
 function formatNumber(number) {
+
+  // ---------------
+  // Up to a thousand
+  // ---------------
+
   if (number < 1000) {
     return number;
   }
+
+  // ---------------
+  // Up to a million
+  // ---------------
+
   if (number < 1000000) {
-    const preDigit = String(number).split('');
+    let preDigit = String(number).split('');
+    const removedDigits = Number(preDigit.slice(-2).join(''));
+
     preDigit.splice(-2);
+    
+    // If the removed digits are greater than 50, round last value up
+    if (removedDigits >= 50) {
+      const newValue = Number(preDigit.join('')) + 1;
+      preDigit = String(newValue).split('');
+    }
+
     preDigit.splice(preDigit.length-1, 0, '.');
     preDigit.push('<span>k</span>');
     return preDigit.join('');
   }
-  const preDigit = String(number).split('');
+
+  // ---------------
+  // Up to a billion
+  // ---------------
+
+  let preDigit = String(number).split('');
+  const removedDigits = Number(preDigit.slice(-5).join(''));
+
   preDigit.splice(-5);
+
+  // If the removed digits are greater than 50000, round last value up
+  if (removedDigits >= 50000) {
+    const newValue = Number(preDigit.join('')) + 1;
+    preDigit = String(newValue).split('');
+  }
+
   preDigit.splice(preDigit.length-1, 0, '.');
   preDigit.push('<span>m</span>');
   return preDigit.join('');
@@ -259,4 +293,3 @@ function sortCountries(array) {
     return b.total_cases - a.total_cases;
   });
 }
-// -------------------------------------------------------
