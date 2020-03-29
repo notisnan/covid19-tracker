@@ -64,6 +64,10 @@ button {
   opacity: 1;
 }
 
+.remove-country--hidden {
+  display: none;
+}
+
 .remove-country svg {
   fill: #121629;
   width: 10px;
