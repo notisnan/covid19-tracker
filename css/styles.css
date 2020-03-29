@@ -162,7 +162,6 @@ button {
   padding-right: 14px;
   display: flex;
   justify-content: flex-end;
-  cursor: pointer;
 }
 
 .header__item--confirmed { color: #f4943e; }
