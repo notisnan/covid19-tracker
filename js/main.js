@@ -159,18 +159,6 @@ function activateDeleteButtons() {
 function createRow(country) {
   const div = document.createElement('div');
   div.classList.add('country');
-  let percentageChangeConfirmed = country.total_new_cases_today/country.total_cases;
-  if (isNaN(percentageChangeConfirmed)) {
-    percentageChangeConfirmed = "0.00";
-  } else {
-    percentageChangeConfirmed = (percentageChangeConfirmed * 100).toFixed(2);
-  }
-  let percentageChangeDead = country.total_new_deaths_today/country.total_deaths;
-  if (isNaN(percentageChangeDead)) {
-    percentageChangeDead = "0.00";
-  } else {
-    percentageChangeDead = (percentageChangeDead * 100).toFixed(2);
-  }
 
   div.innerHTML = `
     <button class="remove-country" data-ourid="${country.ourid}">
@@ -182,12 +170,12 @@ function createRow(country) {
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(country.total_cases)}</div>
-      <div class="statistic__change">+${percentageChangeConfirmed}%</div>
+      <div class="statistic__change">+${calculatePercentage(country.total_new_cases_today, country.total_cases)}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
       <div class="statistic__count">${formatNumber(country.total_deaths)}</div>
-      <div class="statistic__change">+${percentageChangeDead}%</div>
+      <div class="statistic__change">+${calculatePercentage(country.total_new_deaths_today, country.total_deaths)}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
@@ -196,6 +184,19 @@ function createRow(country) {
     </div>
   `;
   return div;
+}
+
+// ---------------------------
+// Calculate percentage change
+// ---------------------------
+
+function calculatePercentage(casesToday, casesTotal) {
+  let percent = casesToday/casesTotal;
+  if (isNaN(percent)) {
+    return "0.00";
+  } else {
+    return (percent * 100).toFixed(2);
+  }
 }
 
 // ----------------------------
@@ -259,4 +260,3 @@ function sortCountries(array) {
     return b.total_cases - a.total_cases;
   });
 }
-// -------------------------------------------------------
