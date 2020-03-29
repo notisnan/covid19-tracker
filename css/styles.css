@@ -75,16 +75,12 @@ button {
   transform: rotate(90deg);
 }
 
-.options {
-  display: flex;
-  margin: 2px 0 2px auto;
-}
-
 .button-refresh {
   border: 0;
   background: none;
   padding: 0 10px;
   cursor: pointer;
+  margin-left: auto;
 }
 
 .button-refresh svg {
@@ -159,27 +155,10 @@ button {
   font-size: 12px;
   letter-spacing: 0.025em;
   padding-left: 20px;
+  padding-right: 14px;
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
-}
-
-.header__item svg {
-  fill: #545a6a;
-  width: 10px;
-  margin-left: 5px;
-}
-
-.header__item--up svg {
-  transform: rotate(180deg);
-}
-
-.header__item--down {
-  
-}
-
-.header__item--active svg {
-  fill: #f2d658;
 }
 
 .header__item--confirmed { color: #f4943e; }

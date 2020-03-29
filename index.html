@@ -8,29 +8,13 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <!-- Add class 'app--no-changes' if you want to hide the change percentages -->
-  <div class="app app--no-changes">
+  <div class="app">
     
     <!-- Header -->
     <div class="header">
-      <div class="header__item header__item--confirmed header__item--up header__item--active column-confirmed">
-        Confirmed
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 85.1 46.5" style="enable-background:new 0 0 85.1 46.5;" xml:space="preserve">
-          <polyline points="85.1,0 42.5,46.5 0,0 "/>
-        </svg>
-      </div>
-      <div class="header__item header__item--deaths header__item--down column-deaths">
-        Deaths
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 85.1 46.5" style="enable-background:new 0 0 85.1 46.5;" xml:space="preserve">
-          <polyline points="85.1,0 42.5,46.5 0,0 "/>
-        </svg>
-      </div>
-      <div class="header__item header__item--recovered header__item--down column-recovered">
-        Recovered
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 85.1 46.5" style="enable-background:new 0 0 85.1 46.5;" xml:space="preserve">
-          <polyline points="85.1,0 42.5,46.5 0,0 "/>
-        </svg>
-      </div>
+      <div class="header__item header__item--confirmed column-confirmed">Confirmed</div>
+      <div class="header__item header__item--deaths column-deaths">Deaths</div>
+      <div class="header__item header__item--recovered column-recovered">Recovered</div>
     </div>
 
     <!-- Countries -->
@@ -43,18 +27,13 @@
         <button class="country-form__button">Add</button>
       </form>
 
-      <!-- Options -->
-      <div class="options">
+      <button class="button-refresh">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+          <path d="M13.6,2.3C12.2,0.9,10.2,0,8,0C3.6,0,0,3.6,0,8s3.6,8,8,8c3.7,0,6.8-2.5,7.7-6h-2.1c-0.8,2.3-3,4-5.6,4c-3.3,0-6-2.7-6-6 s2.7-6,6-6c1.7,0,3.1,0.7,4.2,1.8L9,7h7V0L13.6,2.3z"/>
+        </svg>
+      </button>
 
-        <button class="button-refresh">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-            <path d="M13.6,2.3C12.2,0.9,10.2,0,8,0C3.6,0,0,3.6,0,8s3.6,8,8,8c3.7,0,6.8-2.5,7.7-6h-2.1c-0.8,2.3-3,4-5.6,4c-3.3,0-6-2.7-6-6 s2.7-6,6-6c1.7,0,3.1,0.7,4.2,1.8L9,7h7V0L13.6,2.3z"/>
-          </svg>
-        </button>
-
-      </div> <!-- .options -->
     </div> <!-- .app__footer -->
-
   </div> <!-- .app -->
 
   <script src="js/main.js"></script>
