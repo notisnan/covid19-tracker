@@ -336,7 +336,6 @@ function topFive(countries) {
 // ------------------------------
 
 function sortCountries(array) {
-  console.log(array);
   return array.sort((a, b) => {
     return countryObj[b].total_cases - countryObj[a].total_cases;
   });
