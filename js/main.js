@@ -1,6 +1,6 @@
-// --------------------------------+
-// Initializing the Refresh Button |
-// --------------------------------+
+// -------------------------------
+// Initializing the Refresh Button
+// -------------------------------
 
 const app = document.querySelector('.app');
 const refreshButton = document.querySelector('.button-refresh');
@@ -10,21 +10,19 @@ function refreshUI() {
   app.classList.add('refreshing');
   setTimeout(() => app.classList.remove('refreshing'), 800);
 
-  rebuildTable();
+  updateData(initializeState);
 }
 
-// ----------------------+
-// Fetching country data |
-// ----------------------+
+// ---------------------
+// Fetching country data
+// ---------------------
 
 let countryData = {};
 let worldData = {};
-// Old sructure, need to refactor
 let countryObj = {};
 let userStorage = {};
-let countriesContainer = document.querySelector('.countries');
 
-function updateData() {
+function updateData(cb) {
   const fetchGlobalData = fetch('https://thevirustracker.com/free-api?global=stats').then(response => response.json());
   const fetchCountryData = fetch('https://thevirustracker.com/free-api?countryTotals=ALL').then(response => response.json());
 
@@ -32,15 +30,15 @@ function updateData() {
   fetchData.then(data => {
     worldData = data[0].results[0];
     countryData = data[1].countryitems[0];
+    buildCountryObject(countryData);
 
     // This will only trigger when both API requests return
     // We can now continue to modify the app
-    buildCountryObject(countryData);
-    initializeState();
+    cb();
   });
 }
 
-updateData();
+updateData(initializeState);
 
 // ------------------------------------------------
 // Initialize country array based on local storage 
@@ -53,11 +51,11 @@ function initializeState() {
     if (!result.userStorage) {
       userStorage.countries = topFive(countryObj);
       chrome.storage.sync.set({ 'userStorage': userStorage });
-      console.log('User had no preferences saved.');
+      // console.log('User had no preferences saved.');
     }
     else {
       userStorage = result.userStorage;
-      console.log('User has preferences saved.');
+      // console.log('User has preferences saved.');
     }
     
     rebuildTable();
@@ -130,6 +128,8 @@ function findCountry(country) {
 // --------------------------------
 // Rebuilds the UI - Countries List 
 // --------------------------------
+
+let countriesContainer = document.querySelector('.countries');
 
 function rebuildTable() {
   let rows = '';
