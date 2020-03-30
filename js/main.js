@@ -23,7 +23,7 @@ let countryData = {};
 let worldData = {};
 // Old sructure, need to refactor
 let countryObj = {};
-let myCountries = [];
+let userStorage = {};
 let countriesContainer = document.querySelector('.countries');
 
 function updateData() {
@@ -47,18 +47,18 @@ updateData();
 // ------------------------------------------------
 // Initialize country array based on local storage 
     // TESTING OF LOCAL STORAGE
-    // chrome.storage.local.remove('myCountries');
+    // chrome.storage.local.remove('userStorage');
 // ------------------------------------------------
 
 function initializeState() {
-  chrome.storage.sync.get('myCountries', function (result) {
-    if (!result.myCountries) {
-      myCountries = topFive(countryObj);
-      myCountries.push(worldData);
-      chrome.storage.sync.set({ 'myCountries': myCountries });
+  chrome.storage.sync.get('userStorage', function (result) {
+    if (!result.userStorage) {
+      userStorage.countries = topFive(countryObj);
+      userStorage.countries.push(worldData);
+      chrome.storage.sync.set({ 'userStorage': userStorage });
     }
     else {
-      myCountries = result.myCountries;
+      userStorage = result.userStorage;
       refreshData();
     }
     
@@ -71,12 +71,12 @@ function initializeState() {
 // ---------------------------
 
 function refreshData() {
-  for (let i = 0; i < myCountries.length; i++) {
-    if (myCountries[i].title) {
-      myCountries[i] = countryObj[myCountries[i].title.toLowerCase()];
+  for (let i = 0; i < userStorage.countries.length; i++) {
+    if (userStorage.countries[i].title) {
+      userStorage.countries[i] = countryObj[userStorage.countries[i].title.toLowerCase()];
     } else {
       // update global statistics
-      myCountries[i] = worldData;
+      userStorage.countries[i] = worldData;
     }
   }
 }
@@ -108,7 +108,7 @@ addCountryButton.addEventListener('click', addCountry);
 function addCountry(e) {
   const newCountry = findCountry(addCountryInput.value);
   e.preventDefault();
-  if (myCountries.includes(newCountry)) {
+  if (userStorage.countries.includes(newCountry)) {
     // Update and show the error for a bit, then hide it
     errorField.innerHTML = 'Country is already in your list';
     addCountryForm.classList.add('country-form--error');
@@ -117,8 +117,8 @@ function addCountry(e) {
     }, 1500);
   }
   else if (newCountry) {
-    myCountries.push(newCountry);
-    chrome.storage.sync.set({ 'myCountries': myCountries });
+    userStorage.countries.push(newCountry);
+    chrome.storage.sync.set({ 'userStorage': userStorage });
     rebuildTable();
     addCountryInput.value = "";
   }
@@ -151,9 +151,9 @@ function findCountry(country) {
 function rebuildTable() {
   let rows = '';
 
-  sortCountries(myCountries);
+  sortCountries(userStorage.countries);
   
-  for (let country of myCountries) {
+  for (let country of userStorage.countries) {
     rows += createRow(country).outerHTML;
   }
   
@@ -166,10 +166,10 @@ function rebuildTable() {
 // ----------------
 
 function deleteCountry(countryKey) {
-  for (let i=0; i < myCountries.length; i++) {
-    if (myCountries[i].ourid === Number(countryKey)) {
-      myCountries.splice(i, 1);
-      chrome.storage.sync.set({ 'myCountries': myCountries });
+  for (let i=0; i < userStorage.countries.length; i++) {
+    if (userStorage.countries[i].ourid === Number(countryKey)) {
+      userStorage.countries.splice(i, 1);
+      chrome.storage.sync.set({ 'userStorage': userStorage });
       rebuildTable();
       return;
     }
