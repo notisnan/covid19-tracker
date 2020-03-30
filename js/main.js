@@ -313,6 +313,6 @@ function topFive(countries) {
 
 function sortCountries(array) {
   return array.sort((a, b) => {
-    return b.total_cases - a.total_cases;
+    return countryObj[b].total_cases - countryObj[a].total_cases;
   });
 }
