@@ -10,8 +10,6 @@ function refreshUI() {
   app.classList.add('refreshing');
   setTimeout(() => app.classList.remove('refreshing'), 800);
 
-  console.log('REFRESH');
-  refreshData();
   rebuildTable();
 }
 
@@ -46,39 +44,24 @@ updateData();
 
 // ------------------------------------------------
 // Initialize country array based on local storage 
-    // TESTING OF LOCAL STORAGE
-    // chrome.storage.local.remove('userStorage');
+    // TESTING OF SYNC STORAGE
+    // chrome.storage.sync.remove('userStorage');
 // ------------------------------------------------
 
 function initializeState() {
   chrome.storage.sync.get('userStorage', function (result) {
     if (!result.userStorage) {
       userStorage.countries = topFive(countryObj);
-      userStorage.countries.push(worldData);
       chrome.storage.sync.set({ 'userStorage': userStorage });
+      console.log('User had no preferences saved.');
     }
     else {
       userStorage = result.userStorage;
-      refreshData();
+      console.log('User has preferences saved.');
     }
     
     rebuildTable();
   });
-}
-
-// ---------------------------
-// Refresh Country Data 
-// ---------------------------
-
-function refreshData() {
-  for (let i = 0; i < userStorage.countries.length; i++) {
-    if (userStorage.countries[i].title) {
-      userStorage.countries[i] = countryObj[userStorage.countries[i].title.toLowerCase()];
-    } else {
-      // update global statistics
-      userStorage.countries[i] = worldData;
-    }
-  }
 }
 
 // ---------------------------
@@ -139,7 +122,7 @@ function addCountry(e) {
 
 function findCountry(country) {
   if (countryObj.hasOwnProperty(country.toLowerCase())) {
-    return countryObj[country.toLowerCase()];
+    return country.toLowerCase();
   }
   // TODO: check alternate country spelling object as a fail safe
 }
@@ -154,8 +137,11 @@ function rebuildTable() {
   sortCountries(userStorage.countries);
   
   for (let country of userStorage.countries) {
-    rows += createRow(country).outerHTML;
+    rows += createRow(country, countryObj).outerHTML;
   }
+
+  // Insert the global data as the first value manually on each rebuild
+  rows = createRow(null, worldData).outerHTML + rows;
   
   countriesContainer.innerHTML = rows;
   activateDeleteButtons();
@@ -167,7 +153,7 @@ function rebuildTable() {
 
 function deleteCountry(countryKey) {
   for (let i=0; i < userStorage.countries.length; i++) {
-    if (userStorage.countries[i].ourid === Number(countryKey)) {
+    if (countryObj[userStorage.countries[i]].ourid === Number(countryKey)) {
       userStorage.countries.splice(i, 1);
       chrome.storage.sync.set({ 'userStorage': userStorage });
       rebuildTable();
@@ -193,30 +179,31 @@ function activateDeleteButtons() {
 // Create a New Country Road 
 // -------------------------
 
-function createRow(country) {
+function createRow(item, itemSet) {
+  const itemData = (item) ? itemSet[item] : itemSet;
   const div = document.createElement('div');
   div.classList.add('country');
 
   div.innerHTML = `
-    <button class="${(country.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${country.ourid}">
+    <button class="${(itemData.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${itemData.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
     </button>
-    <div class="country__name">${country.title || 'Global'}</div>
+    <div class="country__name">${itemData.title || 'Global'}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
-      <div class="statistic__count">${formatNumber(country.total_cases)}</div>
-      <div class="statistic__change">+${calculatePercentage(country.total_new_cases_today, country.total_cases)}%</div>
+      <div class="statistic__count">${formatNumber(itemData.total_cases)}</div>
+      <div class="statistic__change">+${calculatePercentage(itemData.total_new_cases_today, itemData.total_cases)}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
-      <div class="statistic__count">${formatNumber(country.total_deaths)}</div>
-      <div class="statistic__change">+${calculatePercentage(country.total_new_deaths_today, country.total_deaths)}%</div>
+      <div class="statistic__count">${formatNumber(itemData.total_deaths)}</div>
+      <div class="statistic__change">+${calculatePercentage(itemData.total_new_deaths_today, itemData.total_deaths)}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
-      <div class="statistic__count">${formatNumber(country.total_recovered)}</div>
+      <div class="statistic__count">${formatNumber(itemData.total_recovered)}</div>
       <div class="statistic__change"></div>
     </div>
   `;
@@ -297,24 +284,23 @@ function formatNumber(number) {
 
 function getSmallestValue(countries) {
   let smallest = countries[0];
-  for (let country of countries) {
-    if (smallest.total_cases > country.total_cases) smallest = country;
+  for (let countryName of countries) {
+    if (countryObj[smallest].total_cases > countryObj[countryName].total_cases) smallest = countryName;
   }
   return smallest;
 }
 
 // --------------------------------------------------------
-// Acquire the top five countries to initiate the extension 
+// Acquire the top four countries to initiate the extension 
 // --------------------------------------------------------
 
-function topFive(countries) {    
-  const sampleCountry = countries["botswana"]; 
-  const mostCasesArray = [sampleCountry, sampleCountry, sampleCountry, sampleCountry, sampleCountry];
+function topFive(countries) {
+  const mostCasesArray = ['botswana', 'botswana', 'botswana', 'botswana'];
   for (let key in countries) {  
     const leastCase = getSmallestValue(mostCasesArray);
-    if (leastCase.total_cases < countries[key].total_cases) {
+    if (countries[leastCase].total_cases < countries[key].total_cases) {
       const indexOfLeastCase = mostCasesArray.indexOf(leastCase);
-      mostCasesArray[indexOfLeastCase] = countryObj[key];
+      mostCasesArray[indexOfLeastCase] = countryObj[key].title.toLowerCase();
     }
   }
 
