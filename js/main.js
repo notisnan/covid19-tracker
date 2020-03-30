@@ -11,7 +11,7 @@ function refreshUI() {
   setTimeout(() => app.classList.remove('refreshing'), 800);
 
   console.log('REFRESH');
-  refreshCountryData();
+  refreshData();
   rebuildTable();
 }
 
@@ -59,9 +59,7 @@ function initializeState() {
     }
     else {
       myCountries = result.myCountries;
-      // update row 0 in order to update World Statistics
-      myCountries[0] = worldData;
-      refreshCountryData();
+      refreshData();
     }
     
     rebuildTable();
@@ -72,10 +70,13 @@ function initializeState() {
 // Refresh Country Data 
 // ---------------------------
 
-function refreshCountryData() {
+function refreshData() {
   for (let i = 0; i < myCountries.length; i++) {
     if (myCountries[i].title) {
       myCountries[i] = countryObj[myCountries[i].title.toLowerCase()];
+    } else {
+      // update global statistics
+      myCountries[i] = worldData;
     }
   }
 }
@@ -173,7 +174,6 @@ function deleteCountry(countryKey) {
       return;
     }
   }
-  console.log('Country is gone.');
 }
 
 // -----------------------------------------------------------------
