@@ -97,8 +97,10 @@ function buildCountryObject(data) {
 // Adding new countries 
 // --------------------
 
+const addCountryForm = document.querySelector('.country-form');
 const addCountryInput = document.querySelector('.country-form__input');
 const addCountryButton = document.querySelector('.country-form__button');
+const errorField = document.querySelector('.country-form__error');
 
 addCountryButton.addEventListener('click', addCountry);
 
@@ -106,7 +108,12 @@ function addCountry(e) {
   const newCountry = findCountry(addCountryInput.value);
   e.preventDefault();
   if (myCountries.includes(newCountry)) {
-    console.log('There\'s already an old man in my country.');
+    // Update and show the error for a bit, then hide it
+    errorField.innerHTML = 'Country is already in your list';
+    addCountryForm.classList.add('country-form--error');
+    setTimeout(() => {
+      addCountryForm.classList.remove('country-form--error');
+    }, 1500);
   }
   else if (newCountry) {
     myCountries.push(newCountry);
@@ -114,7 +121,14 @@ function addCountry(e) {
     rebuildTable();
     addCountryInput.value = "";
   }
-  else console.log('No country for old men.')
+  else {
+    // Update and show the error for a bit, then hide it
+    errorField.innerHTML = 'Invalid country name';
+    addCountryForm.classList.add('country-form--error');
+    setTimeout(() => {
+      addCountryForm.classList.remove('country-form--error');
+    }, 1500);
+  }
 }
 
 // -----------------------------------------------------------------------
