@@ -73,6 +73,9 @@ function buildCountryObject(data) {
       countryObj[value.title.toLowerCase()] = value;
     }
   }
+
+  // Populate alternate spellings obj
+  createAltSpellingsObj();
 }
 
 // --------------------
@@ -113,16 +116,37 @@ function addCountry(e) {
   }
 }
 
+// ---------------------------
+// Alternate country spellings
+// ---------------------------
+
+let alternateSpellings = {};
+
+function createAltSpellingsObj(countries) {
+  alternateSpellings = {
+    // If you want to add an alternative spelling just add it below and point to the right country
+    'us': countryObj['usa'],
+    'united states': countryObj['usa'],
+    'united states of america': countryObj['usa']
+  };
+}
+
 // -----------------------------------------------------------------------
 // Returns matched country
 // Additionally - acts as a fail safe for user who mistypes a country name 
 // -----------------------------------------------------------------------
 
 function findCountry(country) {
-  if (countryObj.hasOwnProperty(country.toLowerCase())) {
-    return country.toLowerCase();
+  country = country.toLowerCase();
+
+  if (countryObj.hasOwnProperty(country)) {
+    return country;
   }
-  // TODO: check alternate country spelling object as a fail safe
+  
+  // Check alternate spellings
+  if (alternateSpellings.hasOwnProperty(country)) {
+    return alternateSpellings[country].title.toLowerCase();
+  }
 }
 
 // --------------------------------
@@ -312,6 +336,7 @@ function topFive(countries) {
 // ------------------------------
 
 function sortCountries(array) {
+  console.log(array);
   return array.sort((a, b) => {
     return countryObj[b].total_cases - countryObj[a].total_cases;
   });
