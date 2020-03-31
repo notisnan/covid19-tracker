@@ -16,7 +16,7 @@ A Chrome extension to show important COVID-19 global and local information.
 - Usage of Sync Storage for user country preferences.
 <br><br>
 ----
-<br>
+
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
 
 The Hackathon presentation is available [here](/presentation/hackathon-032820.pdf).
