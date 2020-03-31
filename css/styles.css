@@ -38,6 +38,27 @@ button {
   margin-top: 5px;
 }
 
+/* ---------- */
+/* App errors */
+/* ---------- */
+
+.app-errors {
+  height: 189px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #f89079;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+  text-align: center;
+  display: none;
+}
+
+.app--error .app-errors {
+  display: flex;
+}
+
 /* ------- */
 /* Buttons */
 /* ------- */
