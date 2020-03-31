@@ -143,6 +143,7 @@ function rebuildTable() {
   // Insert the global data as the first value manually on each rebuild
   rows = createRow(null, worldData).outerHTML + rows;
   
+  app.classList.remove('app--loading');
   countriesContainer.innerHTML = rows;
   activateDeleteButtons();
 }

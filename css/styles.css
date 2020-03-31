@@ -185,6 +185,11 @@ button {
   opacity: 0.5;
 }
 
+.app--loading .countries {
+  height: 189px;
+  background: url('../images/loader.gif') center no-repeat;
+}
+
 .country {
   display: flex;
   align-items: center;
