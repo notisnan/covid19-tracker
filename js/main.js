@@ -184,13 +184,17 @@ function createRow(item, itemSet) {
   const div = document.createElement('div');
   div.classList.add('country');
 
+  // If the item doesn't have a title we know it's global
+  // To prevent too many if checks below, we just set a title on Global
+  if (!itemData.title) itemData.title = 'Global';
+
   div.innerHTML = `
     <button class="${(itemData.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${itemData.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
     </button>
-    <div class="country__name">${itemData.title || 'Global'}</div>
+    <div class="${(itemData.title.length < 20) ? 'country__name' : 'country__name country__name--small' }">${itemData.title}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(itemData.total_cases)}</div>
