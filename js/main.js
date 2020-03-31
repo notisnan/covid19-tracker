@@ -83,12 +83,18 @@ const addCountryForm = document.querySelector('.country-form');
 const addCountryInput = document.querySelector('.country-form__input');
 const addCountryButton = document.querySelector('.country-form__button');
 const errorField = document.querySelector('.country-form__error');
+let latestCountryAdded = null;
 
 addCountryButton.addEventListener('click', addCountry);
 
 function addCountry(e) {
   const newCountry = findCountry(addCountryInput.value);
   e.preventDefault();
+
+  // ------------------------------
+  // Country is already in the list
+  // ------------------------------
+
   if (userStorage.countries.includes(newCountry)) {
     // Update and show the error for a bit, then hide it
     errorField.innerHTML = 'Country is already in your list';
@@ -97,12 +103,30 @@ function addCountry(e) {
       addCountryForm.classList.remove('country-form--error');
     }, 1500);
   }
+
+  // -----------------------
+  // Add country to the list
+  // -----------------------
+
   else if (newCountry) {
+    latestCountryAdded = newCountry;
     userStorage.countries.push(newCountry);
     chrome.storage.sync.set({ 'userStorage': userStorage });
     rebuildTable();
+
+    // Remove the latest country highlight
+    setTimeout(() => {
+      const lastCountryAdded = document.querySelector('.country--added');
+      lastCountryAdded.classList.remove('country--added');
+    }, 200);
+
     addCountryInput.value = "";
   }
+
+  // -------------
+  // Invalid input
+  // -------------
+
   else {
     // Update and show the error for a bit, then hide it
     errorField.innerHTML = 'Invalid country name';
@@ -187,6 +211,14 @@ function createRow(item, itemSet) {
   // If the item doesn't have a title we know it's global
   // To prevent too many if checks below, we just set a title on Global
   if (!itemData.title) itemData.title = 'Global';
+  
+  // If this country as just added, highlight it
+  if (latestCountryAdded !== null) {
+    if (latestCountryAdded === itemData.title.toLowerCase()) {
+      div.classList.add('country--added');
+      latestCountryAdded = null;
+    }
+  }
 
   div.innerHTML = `
     <button class="${(itemData.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${itemData.ourid}">
