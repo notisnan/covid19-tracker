@@ -33,6 +33,10 @@ button {
   min-width: 470px;
 }
 
+.app--disabled {
+  pointer-events: none;
+}
+
 .app__footer {
   display: flex;
   margin-top: 5px;
@@ -85,10 +89,6 @@ button {
   padding: 0 10px;
   cursor: pointer;
   margin-left: auto;
-}
-
-.app--disabled .button-refresh {
-  pointer-events: none;
 }
 
 .button-refresh svg {
