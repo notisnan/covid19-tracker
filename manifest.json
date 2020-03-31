@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "COVID-19 Corona Virus Tracker",
-  "version": "1.7",
+  "version": "1.8",
   "description": "This Chrome Extension is a COVID-19 Corona Virus Tracker allowing you to track the world-wide spread of this pandemic.",
   "permissions": [
     "storage"
