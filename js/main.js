@@ -122,7 +122,7 @@ function addCountry(e) {
 
 let alternateSpellings = {};
 
-function createAltSpellingsObj(countries) {
+function createAltSpellingsObj() {
   alternateSpellings = {
     // If you want to add an alternative spelling just add it below and point to the right country
     'us': countryObj['usa'],
