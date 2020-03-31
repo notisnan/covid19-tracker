@@ -32,7 +32,6 @@ button {
   flex-direction: column;
   overflow: hidden;
   min-width: 480px;
-  width: 480px;
 }
 
 .app__footer {
