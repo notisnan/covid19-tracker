@@ -13,6 +13,7 @@ body {
   align-items: flex-start;
   justify-content: flex-end;
   font-family: 'Roboto', sans-serif;
+  background: #0e1120;
 }
 
 button {
@@ -30,7 +31,7 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 470px;
+  min-width: 480px;
 }
 
 .app__footer {
@@ -44,8 +45,9 @@ button {
 
 .remove-country {
   position: absolute;
-  bottom: 14px;
+  top: 50%;
   left: -12px;
+  transform: translateY(-50%);
   width: 24px;
   height: 24px;
   background: #ff4384;
@@ -187,7 +189,7 @@ button {
 
 .country {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
   background: #252a3d;
   border-top-left-radius: 25px;
@@ -210,7 +212,14 @@ button {
   padding: 10px 20px;
   margin-top: 2px;
   margin-right: auto;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 180px;
+}
+
+.country__name--small {
+  font-size: 12px;
 }
 
 .statistic {
@@ -220,6 +229,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .statistic:last-child {
