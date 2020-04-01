@@ -26,9 +26,7 @@ function refreshUI() {
 // --------------------------------------------------------------------
 
 function continueSpinning() {
-  console.log('transition end');
   if (app.classList.contains('app--refreshing')) {
-    console.log('inside if');
     refreshIconRotation += 360;
     refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
   }
