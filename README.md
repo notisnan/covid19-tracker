@@ -4,7 +4,7 @@ A Chrome extension to show important COVID-19 global and local information.
 
 [Available on the Chrome Store](https://chrome.google.com/webstore/detail/dccmmkjdbpdlcallijclmjkhmpciajdj/).
 
-![](art/banner.png?raw=true)
+<img src="art/banner.jpg" width="400">
 
 ## Features
 - Ability to customize countries.
@@ -14,6 +14,8 @@ A Chrome extension to show important COVID-19 global and local information.
 ## Technical Details
 - Consuming the JSON data from the [virustracker](https://thevirustracker.com/api) API.
 - Usage of Sync Storage for user country preferences.
+<br><br>
+----
 
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
 

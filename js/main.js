@@ -52,6 +52,9 @@ function updateData(cb) {
     }
   }).then(response => response.json());
 
+  // Disable UI when fetching data
+  app.classList.add('app--disabled');
+
   const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
   fetchData.then(data => {
 
@@ -59,9 +62,16 @@ function updateData(cb) {
     updateWorldData(data[0]);
     updateCountryData(data[1]['countries_stat']);
 
+    // Enable UI when fetching data complete
+    app.classList.remove('app--disabled');
+
     // This will only trigger when both API requests return
     // We can now continue to modify the app
     cb();
+  }).catch(error => {
+    // Something went wrong with the API calls
+    app.classList.add('app--error');
+    console.log(error);
   });
 }
 
@@ -126,12 +136,18 @@ const addCountryForm = document.querySelector('.country-form');
 const addCountryInput = document.querySelector('.country-form__input');
 const addCountryButton = document.querySelector('.country-form__button');
 const errorField = document.querySelector('.country-form__error');
+let latestCountryAdded = null;
 
 addCountryButton.addEventListener('click', addCountry);
 
 function addCountry(e) {
   const newCountry = findCountry(addCountryInput.value);
   e.preventDefault();
+
+  // ------------------------------
+  // Country is already in the list
+  // ------------------------------
+
   if (userStorage.countries.includes(newCountry)) {
     // Update and show the error for a bit, then hide it
     errorField.innerHTML = 'Country is already in your list';
@@ -140,12 +156,30 @@ function addCountry(e) {
       addCountryForm.classList.remove('country-form--error');
     }, 1500);
   }
+
+  // -----------------------
+  // Add country to the list
+  // -----------------------
+
   else if (newCountry) {
+    latestCountryAdded = newCountry;
     userStorage.countries.push(newCountry);
     chrome.storage.sync.set({ 'userStorage': userStorage });
     rebuildTable();
+
+    // Remove the latest country highlight
+    setTimeout(() => {
+      const lastCountryAdded = document.querySelector('.country--added');
+      lastCountryAdded.classList.remove('country--added');
+    }, 200);
+
     addCountryInput.value = "";
   }
+
+  // -------------
+  // Invalid input
+  // -------------
+
   else {
     // Update and show the error for a bit, then hide it
     errorField.innerHTML = 'Invalid country name';
@@ -154,6 +188,21 @@ function addCountry(e) {
       addCountryForm.classList.remove('country-form--error');
     }, 1500);
   }
+}
+
+// ---------------------------
+// Alternate country spellings
+// ---------------------------
+
+let alternateSpellings = {};
+
+function createAltSpellingsObj() {
+  alternateSpellings = {
+    // If you want to add an alternative spelling just add it below and point to the right country
+    'us': countryObj['usa'],
+    'united states': countryObj['usa'],
+    'united states of america': countryObj['usa']
+  };
 }
 
 // -----------------------------------------------------------------------
@@ -165,7 +214,6 @@ function findCountry(country) {
   if (countryData.hasOwnProperty(country.toLowerCase())) {
     return country.toLowerCase();
   }
-  // TODO: check alternate country spelling object as a fail safe
 }
 
 // --------------------------------
@@ -231,13 +279,25 @@ function createRow(item, itemSet) {
   const div = document.createElement('div');
   div.classList.add('country');
 
+  // If the item doesn't have a title we know it's global
+  // To prevent too many if checks below, we just set a title on Global
+  if (!itemData.title) itemData.title = 'Global';
+  
+  // If this country as just added, highlight it
+  if (latestCountryAdded !== null) {
+    if (latestCountryAdded === itemData.title.toLowerCase()) {
+      div.classList.add('country--added');
+      latestCountryAdded = null;
+    }
+  }
+
   div.innerHTML = `
     <button class="${(itemData.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${itemData.ourid}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
     </button>
-    <div class="country__name">${itemData.title || 'Global'}</div>
+    <div class="${(itemData.title.length < 20) ? 'country__name' : 'country__name country__name--small' }">${itemData.title}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
       <div class="statistic__count">${formatNumber(itemData.cases)}</div>

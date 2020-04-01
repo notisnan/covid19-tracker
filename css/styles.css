@@ -13,6 +13,7 @@ body {
   align-items: flex-start;
   justify-content: flex-end;
   font-family: 'Roboto', sans-serif;
+  background: #0e1120;
 }
 
 button {
@@ -30,12 +31,37 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 470px;
+  min-width: 480px;
+}
+
+.app--disabled {
+  pointer-events: none;
 }
 
 .app__footer {
   display: flex;
   margin-top: 5px;
+}
+
+/* ---------- */
+/* App errors */
+/* ---------- */
+
+.app-errors {
+  height: 189px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #f89079;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+  text-align: center;
+  display: none;
+}
+
+.app--error .app-errors {
+  display: flex;
 }
 
 /* ------- */
@@ -44,8 +70,9 @@ button {
 
 .remove-country {
   position: absolute;
-  bottom: 14px;
+  top: 50%;
   left: -12px;
+  transform: translateY(-50%);
   width: 24px;
   height: 24px;
   background: #ff4384;
@@ -99,46 +126,6 @@ button {
   fill: #a2afcd;
 }
 
-.button-add-country {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  width: 36px;
-  height: 27px;
-  background: #717b91;
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 20px;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.button-add-country--active {
-  background: #ff4384;
-}
-
-.button-add-country:hover {
-  background: #a2afcd;
-}
-
-.button-add-country--active:hover {
-  background: #ff0058;
-}
-
-.button-add-country svg {
-  width: 10px;
-  height: 10px;
-  transform: rotate(45deg);
-  fill: #121629;
-  transition: transform 0.2s;
-}
-
-.button-add-country--active svg {
-  transform: rotate(0deg);
-}
-
 /* ------ */
 /* Header */
 /* ------ */
@@ -188,7 +175,7 @@ button {
 
 .country {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
   background: #252a3d;
   border-top-left-radius: 25px;
@@ -204,6 +191,12 @@ button {
   background: #30364f;
 }
 
+.country--added,
+.country--added:hover {
+  background: #717b91;
+  transition: background 1s;
+}
+
 .country__name {
   color: #ffddb7;
   font-size: 15px;
@@ -211,7 +204,14 @@ button {
   padding: 10px 20px;
   margin-top: 2px;
   margin-right: auto;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 180px;
+}
+
+.country__name--small {
+  font-size: 12px;
 }
 
 .statistic {
@@ -221,6 +221,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .statistic:last-child {
