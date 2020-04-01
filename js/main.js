@@ -45,11 +45,17 @@ function updateData(cb) {
   const fetchGlobalData = fetch('https://thevirustracker.com/free-api?global=stats').then(response => response.json());
   const fetchCountryData = fetch('https://thevirustracker.com/free-api?countryTotals=ALL').then(response => response.json());
 
+  // Disable UI when fetching data
+  app.classList.add('app--disabled');
+
   const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
   fetchData.then(data => {
     worldData = data[0].results[0];
     countryData = data[1].countryitems[0];
     buildCountryObject(countryData);
+
+    // Enable UI when fetching data complete
+    app.classList.remove('app--disabled');
 
     // This will only trigger when both API requests return
     // We can now continue to modify the app

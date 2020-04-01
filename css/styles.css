@@ -34,6 +34,10 @@ button {
   min-width: 480px;
 }
 
+.app--disabled {
+  pointer-events: none;
+}
+
 .app__footer {
   display: flex;
   margin-top: 5px;
@@ -99,46 +103,6 @@ button {
 .button-refresh:hover svg,
 .app--refreshing .button-refresh svg {
   fill: #a2afcd;
-}
-
-.button-add-country {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  width: 36px;
-  height: 27px;
-  background: #717b91;
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 20px;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.button-add-country--active {
-  background: #ff4384;
-}
-
-.button-add-country:hover {
-  background: #a2afcd;
-}
-
-.button-add-country--active:hover {
-  background: #ff0058;
-}
-
-.button-add-country svg {
-  width: 10px;
-  height: 10px;
-  transform: rotate(45deg);
-  fill: #121629;
-  transition: transform 0.2s;
-}
-
-.button-add-country--active svg {
-  transform: rotate(0deg);
 }
 
 /* ------ */
