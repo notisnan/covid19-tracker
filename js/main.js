@@ -60,6 +60,10 @@ function updateData(cb) {
     // This will only trigger when both API requests return
     // We can now continue to modify the app
     cb();
+  }).catch(error => {
+    // Something went wrong with the API calls
+    app.classList.add('app--error');
+    console.log(error);
   });
 }
 
