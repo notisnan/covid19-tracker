@@ -4,13 +4,32 @@
 
 const app = document.querySelector('.app');
 const refreshButton = document.querySelector('.button-refresh');
+const refreshButtonSvg = document.querySelector('.button-refresh__svg');
+let refreshIconRotation = 0;
+
 refreshButton.addEventListener('click', refreshUI);
+refreshButtonSvg.addEventListener('transitionend', continueSpinning);
 
 function refreshUI() {
-  app.classList.add('refreshing');
-  setTimeout(() => app.classList.remove('refreshing'), 800);
+  app.classList.add('app--refreshing');
+
+  // Start the rotate button spinning
+  // When the data comes back, make sure the last spin gets to finish
+  refreshIconRotation += 360;
+  refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
 
   updateData(initializeState);
+}
+
+// --------------------------------------------------------------------
+// Should the refresh icon continue spinning? Or is has the data loaded
+// --------------------------------------------------------------------
+
+function continueSpinning() {
+  if (app.classList.contains('app--refreshing')) {
+    refreshIconRotation += 360;
+    refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
+  }
 }
 
 // ---------------------
@@ -167,6 +186,10 @@ function rebuildTable() {
   // Insert the global data as the first value manually on each rebuild
   rows = createRow(null, worldData).outerHTML + rows;
   
+  // Reset the UI loading states
+  app.classList.remove('app--loading');
+  app.classList.remove('app--refreshing');
+
   countriesContainer.innerHTML = rows;
   activateDeleteButtons();
 }
