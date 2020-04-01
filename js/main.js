@@ -61,6 +61,7 @@ function updateData(cb) {
     // Normalizes our data to follow our own strcture
     updateWorldData(data[0]);
     updateCountryData(data[1]['countries_stat']);
+    createAltSpellingsObj();
 
     // Enable UI when fetching data complete
     app.classList.remove('app--disabled');
@@ -86,7 +87,8 @@ function updateWorldData(data) {
   worldData.deaths = Number(data.total_deaths.replace(',', '')),
   worldData.new_cases = Number(data.new_cases.replace(',', '')),
   worldData.new_deaths = Number(data.new_deaths.replace(',', '')),
-  worldData.total_recovered = Number(data.total_recovered.replace(',', ''))
+  worldData.total_recovered = Number(data.total_recovered.replace(',', '')),
+  worldData.title = 'Global'
 }
 
 // ----------------------
@@ -199,9 +201,10 @@ let alternateSpellings = {};
 function createAltSpellingsObj() {
   alternateSpellings = {
     // If you want to add an alternative spelling just add it below and point to the right country
-    'us': countryObj['usa'],
-    'united states': countryObj['usa'],
-    'united states of america': countryObj['usa']
+    'us': countryData['usa'],
+    'united states': countryData['usa'],
+    'united states of america': countryData['usa'],
+    'democratic republic of congo': countryData['drc'],
   };
 }
 
@@ -211,8 +214,15 @@ function createAltSpellingsObj() {
 // -----------------------------------------------------------------------
 
 function findCountry(country) {
-  if (countryData.hasOwnProperty(country.toLowerCase())) {
-    return country.toLowerCase();
+  country = country.toLowerCase();
+
+  if (countryData.hasOwnProperty(country)) {
+    return country;
+  }
+  
+  // Check alternate spellings
+  if (alternateSpellings.hasOwnProperty(country)) {
+    return alternateSpellings[country].title.toLowerCase();
   }
 }
 
@@ -248,7 +258,7 @@ function rebuildTable() {
 
 function deleteCountry(countryKey) {
   for (let i=0; i < userStorage.countries.length; i++) {
-    if (countryData[userStorage.countries[i]].ourid === Number(countryKey)) {
+    if (countryData[userStorage.countries[i]].title.toLowerCase() === countryKey) {
       userStorage.countries.splice(i, 1);
       chrome.storage.sync.set({ 'userStorage': userStorage });
       rebuildTable();
@@ -265,7 +275,7 @@ function activateDeleteButtons() {
   const deleteButtons = document.querySelectorAll('.remove-country');
   for (let button of [...deleteButtons]) {
     button.addEventListener('click', () => {
-      deleteCountry(button.getAttribute('data-ourid'));
+      deleteCountry(button.getAttribute('data-name'));
     });
   }
 }
@@ -292,7 +302,7 @@ function createRow(item, itemSet) {
   }
 
   div.innerHTML = `
-    <button class="${(itemData.ourid) ? 'remove-country' : 'remove-country remove-country--hidden'}" data-ourid="${itemData.ourid}">
+    <button class="${(itemData.title !== 'Global') ? 'remove-country' : 'remove-country remove-country--hidden'}" data-name="${itemData.title.toLowerCase()}">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style="enable-background:new 0 0 14 14;" xml:space="preserve">
         <path d="M14,1.4L12.6,0L7,5.6L1.4,0L0,1.4L5.6,7L0,12.6L1.4,14L7,8.4l5.6,5.6l1.4-1.4L8.4,7L14,1.4z"/>
       </svg>
