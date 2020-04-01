@@ -191,6 +191,12 @@ button {
   background: #30364f;
 }
 
+.country--added,
+.country--added:hover {
+  background: #717b91;
+  transition: background 1s;
+}
+
 .country__name {
   color: #ffddb7;
   font-size: 15px;
