@@ -38,18 +38,26 @@ function continueSpinning() {
 
 let countryData = {};
 let worldData = {};
-let countryObj = {};
 let userStorage = {};
 
 function updateData(cb) {
-  const fetchGlobalData = fetch('https://thevirustracker.com/free-api?global=stats').then(response => response.json());
-  const fetchCountryData = fetch('https://thevirustracker.com/free-api?countryTotals=ALL').then(response => response.json());
+  const fetchGlobalData = fetch('https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php', {
+    headers: {
+      
+    }
+  }).then(response => response.json());
+  const fetchCountryData = fetch('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php', {
+    headers: {
+      
+    }
+  }).then(response => response.json());
 
   const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
   fetchData.then(data => {
-    worldData = data[0].results[0];
-    countryData = data[1].countryitems[0];
-    buildCountryObject(countryData);
+
+    // Normalizes our data to follow our own strcture
+    updateWorldData(data[0]);
+    updateCountryData(data[1]['countries_stat']);
 
     // This will only trigger when both API requests return
     // We can now continue to modify the app
@@ -58,6 +66,35 @@ function updateData(cb) {
 }
 
 updateData(initializeState);
+
+// --------------------
+// Normalize world data
+// --------------------
+
+function updateWorldData(data) {
+  worldData.cases = Number(data.total_cases.replace(',', '')),
+  worldData.deaths = Number(data.total_deaths.replace(',', '')),
+  worldData.new_cases = Number(data.new_cases.replace(',', '')),
+  worldData.new_deaths = Number(data.new_deaths.replace(',', '')),
+  worldData.total_recovered = Number(data.total_recovered.replace(',', ''))
+}
+
+// ----------------------
+// Normalize country data
+// ----------------------
+
+function updateCountryData(data) {
+  data.forEach(item => {
+    countryData[item.country_name.toLowerCase()] = {
+      cases: Number(item.cases.replace(',', '')),
+      deaths: Number(item.deaths.replace(',', '')),
+      total_recovered: Number(item.total_recovered.replace(',', '')),
+      new_cases: Number(item.new_cases.replace(',', '')),
+      new_deaths: Number(item.new_deaths.replace(',', '')),
+      title: item.country_name
+    }
+  });
+}
 
 // ------------------------------------------------
 // Initialize country array based on local storage 
@@ -68,7 +105,7 @@ updateData(initializeState);
 function initializeState() {
   chrome.storage.sync.get('userStorage', function (result) {
     if (!result.userStorage) {
-      userStorage.countries = topFive(countryObj);
+      userStorage.countries = topFive();
       chrome.storage.sync.set({ 'userStorage': userStorage });
       // console.log('User had no preferences saved.');
     }
@@ -79,19 +116,6 @@ function initializeState() {
     
     rebuildTable();
   });
-}
-
-// ---------------------------
-// Build up the Country Object 
-// ---------------------------
-
-function buildCountryObject(data) {
-  // key = Country Names, values = Country Object
-  for (let [key, value] of Object.entries(data)) {
-    if (value.title) {
-      countryObj[value.title.toLowerCase()] = value;
-    }
-  }
 }
 
 // --------------------
@@ -138,7 +162,7 @@ function addCountry(e) {
 // -----------------------------------------------------------------------
 
 function findCountry(country) {
-  if (countryObj.hasOwnProperty(country.toLowerCase())) {
+  if (countryData.hasOwnProperty(country.toLowerCase())) {
     return country.toLowerCase();
   }
   // TODO: check alternate country spelling object as a fail safe
@@ -156,7 +180,7 @@ function rebuildTable() {
   sortCountries(userStorage.countries);
   
   for (let country of userStorage.countries) {
-    rows += createRow(country, countryObj).outerHTML;
+    rows += createRow(country, countryData).outerHTML;
   }
 
   // Insert the global data as the first value manually on each rebuild
@@ -176,7 +200,7 @@ function rebuildTable() {
 
 function deleteCountry(countryKey) {
   for (let i=0; i < userStorage.countries.length; i++) {
-    if (countryObj[userStorage.countries[i]].ourid === Number(countryKey)) {
+    if (countryData[userStorage.countries[i]].ourid === Number(countryKey)) {
       userStorage.countries.splice(i, 1);
       chrome.storage.sync.set({ 'userStorage': userStorage });
       rebuildTable();
@@ -216,13 +240,13 @@ function createRow(item, itemSet) {
     <div class="country__name">${itemData.title || 'Global'}</div>
     <!-- Confirmed -->
     <div class="statistic column-confirmed">
-      <div class="statistic__count">${formatNumber(itemData.total_cases)}</div>
-      <div class="statistic__change">+${calculatePercentage(itemData.total_new_cases_today, itemData.total_cases)}%</div>
+      <div class="statistic__count">${formatNumber(itemData.cases)}</div>
+      <div class="statistic__change">+${calculatePercentage(itemData.new_cases, itemData.cases)}%</div>
     </div>
     <!-- Deaths -->
     <div class="statistic column-deaths">
-      <div class="statistic__count">${formatNumber(itemData.total_deaths)}</div>
-      <div class="statistic__change">+${calculatePercentage(itemData.total_new_deaths_today, itemData.total_deaths)}%</div>
+      <div class="statistic__count">${formatNumber(itemData.deaths)}</div>
+      <div class="statistic__change">+${calculatePercentage(itemData.new_deaths, itemData.deaths)}%</div>
     </div>
     <!-- Recovered -->
     <div class="statistic column-recovered">
@@ -308,7 +332,7 @@ function formatNumber(number) {
 function getSmallestValue(countries) {
   let smallest = countries[0];
   for (let countryName of countries) {
-    if (countryObj[smallest].total_cases > countryObj[countryName].total_cases) smallest = countryName;
+    if (countryData[smallest].cases > countryData[countryName].cases) smallest = countryName;
   }
   return smallest;
 }
@@ -317,13 +341,13 @@ function getSmallestValue(countries) {
 // Acquire the top four countries to initiate the extension 
 // --------------------------------------------------------
 
-function topFive(countries) {
+function topFive() {
   const mostCasesArray = ['botswana', 'botswana', 'botswana', 'botswana'];
-  for (let key in countries) {  
+  for (let key in countryData) {  
     const leastCase = getSmallestValue(mostCasesArray);
-    if (countries[leastCase].total_cases < countries[key].total_cases) {
+    if (countryData[leastCase].cases < countryData[key].cases) {
       const indexOfLeastCase = mostCasesArray.indexOf(leastCase);
-      mostCasesArray[indexOfLeastCase] = countryObj[key].title.toLowerCase();
+      mostCasesArray[indexOfLeastCase] = countryData[key].title.toLowerCase();
     }
   }
 
@@ -336,6 +360,6 @@ function topFive(countries) {
 
 function sortCountries(array) {
   return array.sort((a, b) => {
-    return countryObj[b].total_cases - countryObj[a].total_cases;
+    return countryData[b].cases - countryData[a].cases;
   });
 }
