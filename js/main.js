@@ -1,3 +1,5 @@
+import headers from './headers.js';
+
 // -------------------------------
 // Initializing the Refresh Button
 // -------------------------------
@@ -42,14 +44,10 @@ let userStorage = {};
 
 function updateData(cb) {
   const fetchGlobalData = fetch('https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php', {
-    headers: {
-      
-    }
+    headers: headers
   }).then(response => response.json());
   const fetchCountryData = fetch('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php', {
-    headers: {
-      
-    }
+    headers: headers
   }).then(response => response.json());
 
   // Disable UI when fetching data
