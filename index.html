@@ -10,21 +10,40 @@
 <body>
   <div class="app app--loading">
     
+    <!-- ////// -->
     <!-- Header -->
-    <div class="header">
-      <div class="header__item header__item--confirmed column-confirmed">Confirmed</div>
-      <div class="header__item header__item--deaths column-deaths">Deaths</div>
-      <div class="header__item header__item--recovered column-recovered">Recovered</div>
+    <!-- ////// -->
+
+    <div class="app__header">
+      <div class="country-toggle">
+        <button class="country-toggle__item country-toggle__item--active">My Countries</button>
+        <button class="country-toggle__item">All Countries</button>
+      </div>
     </div>
 
-    <!-- Error messages -->
-    <div class="app-errors">
-      Data currently unavailable,<br>
-      please check back later.
-    </div>
+    <!-- ////// -->
+    <!-- Body -->
+    <!-- ////// -->
 
-    <!-- Countries -->
-    <div class="countries"></div> 
+    <div class="app__body">
+      <div class="header">
+        <div class="header__item header__item--confirmed column-confirmed">Confirmed</div>
+        <div class="header__item header__item--deaths column-deaths">Deaths</div>
+        <div class="header__item header__item--recovered column-recovered">Recovered</div>
+      </div>
+
+      <div class="app-errors">
+        Data currently unavailable,<br>
+        please check back later.
+      </div>
+
+      <div class="my-countries countries"></div> 
+      <div class="all-countries countries all-countries--hide"></div>
+    </div> <!-- .app__body -->
+
+    <!-- ////// -->
+    <!-- Footer -->
+    <!-- ////// -->
 
     <div class="app__footer">
       <!-- Add country -->
@@ -39,8 +58,8 @@
           <path d="M13.6,2.3C12.2,0.9,10.2,0,8,0C3.6,0,0,3.6,0,8s3.6,8,8,8c3.7,0,6.8-2.5,7.7-6h-2.1c-0.8,2.3-3,4-5.6,4c-3.3,0-6-2.7-6-6 s2.7-6,6-6c1.7,0,3.1,0.7,4.2,1.8L9,7h7V0L13.6,2.3z"/>
         </svg>
       </button>
-
     </div> <!-- .app__footer -->
+
   </div> <!-- .app -->
 
   <script src="js/main.js" type="module"></script>
