@@ -178,6 +178,23 @@ class App extends React.Component {
   }
 
   // ----------------
+  // Add a Country
+  // ----------------
+
+  addCountry = (countryElement) => {
+    // check if country vaue is valid
+    console.log(countryElement.value);
+    const inputValue = countryElement.value.toLowerCase();
+    if (this.state.countryData.hasOwnProperty(inputValue)) {
+      console.log("We have a match");
+      const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+      newUserStorage.countries.push(inputValue);
+      this.setState({userStorage: newUserStorage});
+      countryElement.value = "";
+    }
+  } 
+
+  // ----------------
   // Delete a Country
   // ----------------
 
@@ -238,7 +255,7 @@ class App extends React.Component {
     
         <div className="app__footer">
           {this.state.activeTab === 'my-countries' &&
-            <CountryForm />
+            <CountryForm addCountry={this.addCountry}/>
           }
           <RefreshButton />
         </div>

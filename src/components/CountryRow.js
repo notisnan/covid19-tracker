@@ -17,7 +17,7 @@ class CountryRow extends React.Component {
         <div className="country__name">{country.title}</div>
 
         <div className="statistic column-confirmed">
-        <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
+          <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
           <div className="statistic__change" dangerouslySetInnerHTML={{__html: calculatePercentage(country.new_cases, country.cases)}}></div>
         </div>
 
