@@ -183,10 +183,13 @@ class App extends React.Component {
 
   addCountry = (countryElement) => {
     // check if country vaue is valid
-    console.log(countryElement.value);
     const inputValue = countryElement.value.toLowerCase();
+
     if (this.state.countryData.hasOwnProperty(inputValue)) {
-      console.log("We have a match");
+      if (this.state.userStorage.countries.includes(inputValue)) {
+        //TODO: Error pop-up: You already have that country 
+        return;
+      }
       const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
       newUserStorage.countries.push(inputValue);
       this.setState({userStorage: newUserStorage});
@@ -199,9 +202,12 @@ class App extends React.Component {
   // ----------------
 
   deleteCountry = (countryKey) => {
+    console.log(countryKey);
     for (let i=0; i < this.state.userStorage.countries.length; i++) {
       if (this.state.countryData[this.state.userStorage.countries[i]].title.toLowerCase() === countryKey) {
-        this.state.userStorage.countries.splice(i, 1);
+        const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+        newUserStorage.countries.splice(i, 1);
+        this.setState({userStorage: newUserStorage});
         // chrome.storage.sync.set({ 'userStorage': userStorage });
       }
     }
@@ -239,7 +245,11 @@ class App extends React.Component {
           {this.state.activeTab === 'my-countries' && !this.state.loading &&
             <div className="my-countries countries">
               {this.state.userStorage.countries.map(countryName => (
-                <CountryRow key={countryName} countryData={this.state.countryData[countryName]} />
+                <CountryRow 
+                  key={countryName} 
+                  countryData={this.state.countryData[countryName]} 
+                  deleteCountry={this.deleteCountry}
+                />
               ))}
             </div>   
           }
