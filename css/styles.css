@@ -31,7 +31,7 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 500px;
+  width: 480px;
 }
 
 .app--disabled {
