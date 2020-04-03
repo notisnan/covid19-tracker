@@ -80,7 +80,7 @@ button {
   background: #4a547a;
   border-radius: 17px;
   z-index: 10;
-  transition: transform 0.2s;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .country-toggle--right::after {
@@ -102,7 +102,7 @@ button {
   position: relative;
   z-index: 20;
   width: 110px;
-  transition: color 0.2s;
+  transition: color 0.4s 0.1s;
 }
 
 .country-toggle__item:first-child { color: #ffddb7; }
