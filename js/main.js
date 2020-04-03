@@ -81,11 +81,11 @@ updateData(initializeState);
 // --------------------
 
 function updateWorldData(data) {
-  worldData.cases = Number(data.total_cases.replace(',', '')),
-  worldData.deaths = Number(data.total_deaths.replace(',', '')),
-  worldData.new_cases = Number(data.new_cases.replace(',', '')),
-  worldData.new_deaths = Number(data.new_deaths.replace(',', '')),
-  worldData.total_recovered = Number(data.total_recovered.replace(',', '')),
+  worldData.cases = Number(data.total_cases.split(',').join('')),
+  worldData.deaths = Number(data.total_deaths.split(',').join('')),
+  worldData.new_cases = Number(data.new_cases.split(',').join('')),
+  worldData.new_deaths = Number(data.new_deaths.split(',').join('')),
+  worldData.total_recovered = Number(data.total_recovered.split(',').join('')),
   worldData.title = 'Global'
 }
 
@@ -96,11 +96,11 @@ function updateWorldData(data) {
 function updateCountryData(data) {
   data.forEach(item => {
     countryData[item.country_name.toLowerCase()] = {
-      cases: Number(item.cases.replace(',', '')),
-      deaths: Number(item.deaths.replace(',', '')),
-      total_recovered: Number(item.total_recovered.replace(',', '')),
-      new_cases: Number(item.new_cases.replace(',', '')),
-      new_deaths: Number(item.new_deaths.replace(',', '')),
+      cases: Number(item.cases.split(',').join('')),
+      deaths: Number(item.deaths.split(',').join('')),
+      total_recovered: Number(item.total_recovered.split(',').join('')),
+      new_cases: Number(item.new_cases.split(',').join('')),
+      new_deaths: Number(item.new_deaths.split(',').join('')),
       title: item.country_name
     }
   });
