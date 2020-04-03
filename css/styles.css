@@ -31,7 +31,7 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 490px;
+  width: 500px;
 }
 
 .app--disabled {
@@ -48,12 +48,15 @@ button {
 
 .app__body {
   padding: 0 20px 0;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .app__footer {
   display: flex;
   margin-top: 5px;
   padding: 0 20px 15px;
+  min-height: 48px;
 }
 
 /* -------------- */
@@ -125,9 +128,7 @@ button {
   display: none;
 }
 
-.app--error .app-errors {
-  display: flex;
-}
+.app--error .app-errors { display: flex; }
 
 /* ------- */
 /* Buttons */
@@ -152,9 +153,7 @@ button {
   transition: opacity 0.2s;
 }
 
-.country:hover .remove-country {
-  opacity: 1;
-}
+.country:hover .remove-country { opacity: 1; }
 
 .remove-country--hidden,
 .all-countries .remove-country {
@@ -168,9 +167,7 @@ button {
   transition: transform 0.4s;
 }
 
-.remove-country:hover svg {
-  transform: rotate(90deg);
-}
+.remove-country:hover svg { transform: rotate(90deg); }
 
 .button-refresh {
   border: 0;
@@ -201,6 +198,7 @@ button {
   justify-content: flex-end;
   margin-bottom: 18px;
   margin-right: 10px;
+  padding: 0 20px;
 }
 
 .header__item {

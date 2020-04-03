@@ -1,5 +1,11 @@
 import headers from './headers.js';
 
+// --------------------------
+// Start up custom scrollbars
+// --------------------------
+
+OverlayScrollbars(document.querySelector('.app__body'), {className: 'os-theme-thick-light'});
+
 // -------------------------------
 // Initializing the Refresh Button
 // -------------------------------
