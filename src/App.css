@@ -1,0 +1,79 @@
+.app {
+  background: #0e1120;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 480px;
+}
+
+.app--disabled {
+  pointer-events: none;
+}
+
+.app__header {
+  background: #252a3d;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app__body {
+  padding: 0 20px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.app__footer {
+  display: flex;
+  margin-top: 5px;
+  padding: 0 20px 15px;
+  min-height: 48px;
+}
+
+/* ---------- */
+/* App errors */
+/* ---------- */
+
+.app-errors {
+  height: 189px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #f89079;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+  text-align: center;
+  display: none;
+}
+
+.app--error .app-errors { display: flex; }
+
+/* ------------ */
+/* Column Sizes */
+/* ------------ */
+
+.column-confirmed { width: 104px; }
+.column-deaths { width: 100px; }
+.column-recovered { width: 104px; }
+
+/* ------------ */
+/* Country list */
+/* ------------ */
+
+.my-countries--hide { display: none; }
+.all-countries--hide { display: none; }
+
+.countries {
+  transition: opacity 0.5s;
+}
+
+.app--refreshing .countries {
+  opacity: 0.5;
+}
+
+.app--loading .countries {
+  height: 189px;
+  background: url('./images/loader.gif') center no-repeat;
+}

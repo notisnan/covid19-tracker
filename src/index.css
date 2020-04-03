@@ -1,0 +1,27 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0px 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-family: 'Roboto', sans-serif;
+  background: #000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  outline: none;
+}
+
+::placeholder {
+  color: #98a4c0;
+}

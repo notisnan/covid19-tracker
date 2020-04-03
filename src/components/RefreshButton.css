@@ -1,0 +1,19 @@
+.button-refresh {
+  border: 0;
+  background: none;
+  padding: 0 10px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.button-refresh svg {
+  width: 20px;
+  height: 20px;
+  fill: #808aa2;
+  transition: fill 0.2s, transform 1s;
+}
+
+.button-refresh:hover svg,
+.app--refreshing .button-refresh svg {
+  fill: #a2afcd;
+}

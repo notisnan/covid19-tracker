@@ -1,3 +1,6 @@
 .DS_Store
 /concepts
 headers.js
+/node_modules
+/old-extension
+/build
