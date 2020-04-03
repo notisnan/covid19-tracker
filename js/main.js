@@ -1,5 +1,11 @@
 import headers from './headers.js';
 
+// --------------------------
+// Start up custom scrollbars
+// --------------------------
+
+OverlayScrollbars(document.querySelector('.app__body'), {className: 'os-theme-thick-light'});
+
 // -------------------------------
 // Initializing the Refresh Button
 // -------------------------------
@@ -21,6 +27,23 @@ function refreshUI() {
   refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
 
   updateData(initializeState);
+}
+
+// -----------
+// List toggle
+// -----------
+
+const listToggle = document.querySelector('.country-toggle');
+const myCountries = document.querySelector('.my-countries');
+const allCountries = document.querySelector('.all-countries');
+
+listToggle.addEventListener('click', listToggleClick);
+
+function listToggleClick() {
+  app.classList.toggle('app--all-countries');
+  myCountries.classList.toggle('my-countries--hide');
+  allCountries.classList.toggle('all-countries--hide');
+  listToggle.classList.toggle('country-toggle--right');
 }
 
 // --------------------------------------------------------------------
@@ -104,6 +127,27 @@ function updateCountryData(data) {
       title: item.country_name
     }
   });
+}
+
+// -------------------------
+// Populate all country data
+// -------------------------
+
+const allCountriesList = document.querySelector('.all-countries');
+
+function populateAllCountries() {
+  let rows = '';
+
+  const sortedCountries = sortCountries(Object.keys(countryData));
+  
+  for (let country of sortedCountries) {
+    rows += createRow(country, countryData).outerHTML;
+  }
+
+  // // Insert the global data as the first value manually on each rebuild
+  rows = createRow(null, worldData).outerHTML + rows;
+
+  allCountriesList.innerHTML = rows;
 }
 
 // ------------------------------------------------
@@ -248,6 +292,9 @@ function rebuildTable() {
 
   countriesContainer.innerHTML = rows;
   activateDeleteButtons();
+
+  // Also repopulate all country list
+  populateAllCountries();
 }
 
 // ----------------
