@@ -5,11 +5,11 @@ import calculatePercentage from '../helpers/calculatePercentage.js';
 
 class CountryRow extends React.Component {
   onCountryDelete = () => {
-    this.props.deleteCountry(this.props.countryData.title.toLowerCase());
+    this.props.deleteCountry(this.props.placeData.title.toLowerCase());
   }
 
   render() {
-    const country = this.props.countryData;
+    const country = this.props.placeData;
 
     return (
       <div className="country">

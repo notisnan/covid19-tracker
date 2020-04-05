@@ -85,18 +85,6 @@ class App extends React.Component {
     });
   }
 
-  // --------------------------------------------------------
-  // HELPER: returns the smallest element of the passed array 
-  // --------------------------------------------------------
-
-  getSmallestValue = (countries) => {
-    let smallest = countries[0];
-    for (let countryName of countries) {
-      if (this.state.countryData[smallest].cases > this.state.countryData[countryName].cases) smallest = countryName;
-    }
-    return smallest;
-  }
-
   // ------------------------------------------------
   // Initialize country array based on local storage 
       // TESTING OF SYNC STORAGE
@@ -202,10 +190,13 @@ class App extends React.Component {
            !this.state.loading &&
            !this.state.error &&
             <div className="my-countries countries">
+
+              <CountryRow key="global" placeData={this.state.worldData} />
+
               {this.state.userStorage.countries.map(countryName => (
                 <CountryRow 
-                  key={countryName} 
-                  countryData={this.state.countryData[countryName]} 
+                  key={countryName}
+                  placeData={this.state.countryData[countryName]}
                   deleteCountry={this.deleteCountry}
                 />
               ))}
@@ -216,8 +207,14 @@ class App extends React.Component {
            !this.state.loading &&
            !this.state.error &&
             <div className="all-countries countries">
+
+              <CountryRow key="global" placeData={this.state.worldData} />
+
               {Object.values(this.state.countryData).map(countryData => (
-                <CountryRow key={countryData.title} countryData={countryData} />
+                <CountryRow
+                  key={countryData.title}
+                  placeData={countryData}
+                />
               ))}
             </div>
           }
