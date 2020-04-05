@@ -64,9 +64,9 @@ class App extends React.Component {
     const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
     fetchData.then(data => {
   
-      // Normalizes our data to follow our own strcture
-      this.updateWorldData(data[0]);
-      this.updateCountryData(data[1]['countries_stat']);
+      // Convert API data into a normazlied format
+      this.api1ConvertWorldData(data[0]);
+      this.api1ConvertCountryData(data[1]['countries_stat']);
       // this.createAltSpellingsObj();
   
       // Enable UI when fetching data complete
@@ -78,7 +78,7 @@ class App extends React.Component {
     }).catch(error => {
       // Something went wrong with the API calls
       this.setState({error: true});
-      console.log(error);
+      console.log('ERROR: ', error);
     });
   }
 
@@ -86,7 +86,7 @@ class App extends React.Component {
   // Normalize country data
   // ----------------------
 
-  updateCountryData = (data) => {
+  api1ConvertCountryData = (data) => {
     const newCountryData = {};
 
     data.forEach(item => {
@@ -107,7 +107,7 @@ class App extends React.Component {
   // Normalize world data
   // --------------------
 
-  updateWorldData = (data) => {
+  api1ConvertWorldData = (data) => {
     const newWorldData = {
       cases: Number(data.total_cases.split(',').join('')),
       deaths: Number(data.total_deaths.split(',').join('')),
@@ -234,15 +234,17 @@ class App extends React.Component {
   
         <CountriesHeadings />
     
-        <OverlayScrollbarsComponent className="os-theme-thick-light app__body">
-          {this.errors &&
+        <OverlayScrollbarsComponent options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
+          {this.state.error &&
             <div className="app-errors">
               Data currently unavailable,<br />
               please check back later.
             </div>
           }
 
-          {this.state.activeTab === 'my-countries' && !this.state.loading &&
+          {this.state.activeTab === 'my-countries' &&
+           !this.state.loading &&
+           !this.state.error &&
             <div className="my-countries countries">
               {this.state.userStorage.countries.map(countryName => (
                 <CountryRow 
@@ -254,7 +256,9 @@ class App extends React.Component {
             </div>   
           }
           
-          {this.state.activeTab === 'all-countries' && !this.state.loading &&
+          {this.state.activeTab === 'all-countries' &&
+           !this.state.loading &&
+           !this.state.error &&
             <div className="all-countries countries">
               {Object.values(this.state.countryData).map(countryData => (
                 <CountryRow key={countryData.title} countryData={countryData} />
@@ -265,6 +269,7 @@ class App extends React.Component {
     
         <div className="app__footer">
           {this.state.activeTab === 'my-countries' &&
+           !this.state.error &&
             <CountryForm addCountry={this.addCountry}/>
           }
           <RefreshButton />

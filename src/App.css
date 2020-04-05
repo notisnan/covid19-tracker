@@ -45,10 +45,7 @@
   letter-spacing: 0.025em;
   line-height: 1.4;
   text-align: center;
-  display: none;
 }
-
-.app--error .app-errors { display: flex; }
 
 /* ------------ */
 /* Column Sizes */
