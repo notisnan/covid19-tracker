@@ -19,7 +19,7 @@ import headers from './headers.js';
 import sortCountries from './helpers/sortCountries.js';
 
 // Images
-import './images/loader.gif';
+import loader from './images/loader.gif';
 
 // ---
 // App
@@ -235,8 +235,14 @@ class App extends React.Component {
         <CountriesHeadings />
     
         <OverlayScrollbarsComponent options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
+          {this.state.loading &&
+            <div className="app-message">
+              <img src={loader} alt=""/>
+            </div>
+          }
+          
           {this.state.error &&
-            <div className="app-errors">
+            <div className="app-message app-message--errors">
               Data currently unavailable,<br />
               please check back later.
             </div>
