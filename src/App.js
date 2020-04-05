@@ -38,6 +38,7 @@ class App extends React.Component {
       refreshing: false,
       worldData: {},
       countryData: {},
+      alternateSpellings: {},
       countryList: [],
       error: false,
       activeTab: 'my-countries',
@@ -74,14 +75,20 @@ class App extends React.Component {
       const newWorldData = api1ConvertWorldData(data[0]);
       const newCountryData = api1ConvertCountryData(data[1]['countries_stat']);
       const newCountryList = sortCountries(Object.keys(newCountryData), newCountryData);
+      const newAlternateSpellings = {
+        'us': newCountryData['usa'],
+        'united states': newCountryData['usa'],
+        'united states of america': newCountryData['usa'],
+        'democratic republic of congo': newCountryData['drc'],
+        'south korea': newCountryData['s. korea']
+      };
 
       this.setState({
         worldData: newWorldData,
         countryData: newCountryData,
-        countryList: newCountryList
+        countryList: newCountryList,
+        alternateSpellings: newAlternateSpellings
       });
-
-      // this.createAltSpellingsObj();
   
       // Enable UI when fetching data complete
       if (this.state.loading) this.setState({loading: false});
@@ -130,25 +137,6 @@ class App extends React.Component {
   // Refresh data
   // ------------
 
-  // const app = document.querySelector('.app');
-  // const refreshButton = document.querySelector('.button-refresh');
-  // const refreshButtonSvg = document.querySelector('.button-refresh__svg');
-  // let refreshIconRotation = 0;
-
-  // refreshButton.addEventListener('click', refreshUI);
-  // refreshButtonSvg.addEventListener('transitionend', continueSpinning);
-
-  // function refreshUI() {
-  //   app.classList.add('app--refreshing');
-
-  //   // Start the rotate button spinning
-  //   // When the data comes back, make sure the last spin gets to finish
-  //   refreshIconRotation += 360;
-  //   refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
-
-  //   updateData(initializeState);
-  // }
-
   refreshData = (svg) => {
     if (this.state.refreshing) return;
 
@@ -160,23 +148,20 @@ class App extends React.Component {
       });
     });
   }
-
-  // -------------------
-  // On component update
-  // -------------------
-
-  // componentDidUpdate() {
-  //   console.log('component did update');
-  // }
   
   // ----------------
   // Add a Country
   // ----------------
 
   addCountry = (countryElement) => {
-    // check if country vaue is valid
-    const inputValue = countryElement.value.toLowerCase();
+    let inputValue = countryElement.value.toLowerCase();
 
+    // check to see if this is an alternate spelling
+    if (this.state.alternateSpellings.hasOwnProperty(inputValue)) {
+      inputValue = this.state.alternateSpellings[inputValue].title.toLowerCase();
+    }
+
+    // check if country exists in countryData or alternateSpellings
     if (this.state.countryData.hasOwnProperty(inputValue)) {
       if (this.state.userStorage.countries.includes(inputValue)) {
         this.setState({inputError: true, inputErrorMessage: 'Country is already in your list'}, hideErrorMessage);
