@@ -179,6 +179,7 @@ class App extends React.Component {
 
       const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
       newUserStorage.countries.push(inputValue);
+      newUserStorage.countries = sortCountries(newUserStorage.countries, this.state.countryData);
       this.setState({userStorage: newUserStorage});
       countryElement.value = "";
     } else {
