@@ -17,6 +17,7 @@ import headers from './headers.js';
 
 // Helper Functions
 import sortCountries from './helpers/sortCountries.js';
+import {api1ConvertWorldData, api1ConvertCountryData} from './helpers/api1ConvertData';
 
 // Images
 import loader from './images/loader.gif';
@@ -65,8 +66,9 @@ class App extends React.Component {
     fetchData.then(data => {
   
       // Convert API data into a normazlied format
-      this.api1ConvertWorldData(data[0]);
-      this.api1ConvertCountryData(data[1]['countries_stat']);
+      this.setState({worldData: api1ConvertWorldData(data[0])});
+      this.setState({countryData: api1ConvertCountryData(data[1]['countries_stat'])});
+
       // this.createAltSpellingsObj();
   
       // Enable UI when fetching data complete
@@ -82,49 +84,11 @@ class App extends React.Component {
     });
   }
 
-  // ----------------------
-  // Normalize country data
-  // ----------------------
+  // -------------------------------------------------------------------------------------
+  // If user had no preferences, populate my countries list with top 4 confirmed countries
+  // -------------------------------------------------------------------------------------
 
-  api1ConvertCountryData = (data) => {
-    const newCountryData = {};
-
-    data.forEach(item => {
-      newCountryData[item.country_name.toLowerCase()] = {
-        cases: Number(item.cases.split(',').join('')),
-        deaths: Number(item.deaths.split(',').join('')),
-        total_recovered: Number(item.total_recovered.split(',').join('')),
-        new_cases: Number(item.new_cases.split(',').join('')),
-        new_deaths: Number(item.new_deaths.split(',').join('')),
-        title: item.country_name
-      }
-    });
-
-    this.setState({countryData: newCountryData});
-  }
-
-  // --------------------
-  // Normalize world data
-  // --------------------
-
-  api1ConvertWorldData = (data) => {
-    const newWorldData = {
-      cases: Number(data.total_cases.split(',').join('')),
-      deaths: Number(data.total_deaths.split(',').join('')),
-      new_cases: Number(data.new_cases.split(',').join('')),
-      new_deaths: Number(data.new_deaths.split(',').join('')),
-      total_recovered: Number(data.total_recovered.split(',').join('')),
-      title: 'Global'
-    };
-
-    this.setState({worldData: newWorldData});
-  }
-
-  // --------------------------------------------------------
-  // Acquire the top four countries to initiate the extension 
-  // --------------------------------------------------------
-
-  topFive = () => {
+  populateDefaultCountries = () => {
     const mostCasesArray = ['botswana', 'botswana', 'botswana', 'botswana'];
     for (let key in this.state.countryData) {  
       const leastCase = this.getSmallestValue(mostCasesArray);
@@ -164,7 +128,7 @@ class App extends React.Component {
 
     // chrome.storage.sync.get('userStorage', function (result) {
     //   if (!result.userStorage) {
-    //     userStorage.countries = topFive();
+    //     userStorage.countries = populateDefaultCountries();
     //     chrome.storage.sync.set({ 'userStorage': userStorage });
     //     // console.log('User had no preferences saved.');
     //   }
