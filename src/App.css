@@ -62,10 +62,9 @@
 /* Country list */
 /* ------------ */
 
-.countries {
-  transition: opacity 0.5s;
-}
+.countries { transition: opacity 0.5s; }
 
 .app--refreshing .countries {
   opacity: 0.5;
+  pointer-events: none;
 }

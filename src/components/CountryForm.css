@@ -2,9 +2,8 @@
 /* Add country form */
 /* ---------------- */
 
-.country-form {
-  position: relative;
-}
+.country-form { position: relative; }
+.country-form--diabled { pointer-events: none; }
 
 .country-form__input {
   background: #252a3d;
@@ -32,9 +31,7 @@
   transition: background 0.2s;
 }
 
-.country-form__button:hover {
-  background: #53ffc7;
-}
+.country-form__button:hover { background: #53ffc7; }
 
 /* ------------------- */
 /* Country form errors */

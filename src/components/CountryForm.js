@@ -16,7 +16,7 @@ class CountryForm extends React.Component {
 
   render() {
     return (
-      <form className="country-form" onSubmit={(e) => e.preventDefault()}>
+      <form className={`country-form ${this.props.state.refreshing ? 'country-form--diabled' : ''}`} onSubmit={(e) => e.preventDefault()}>
         <CSSTransition
           in={this.props.state.inputError}
           exit={true}

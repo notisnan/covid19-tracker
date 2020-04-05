@@ -32,6 +32,7 @@ class App extends React.Component {
 
     this.state = {
       loading: true,
+      refreshing: false,
       worldData: {},
       countryData: {},
       error: false,
@@ -66,19 +67,19 @@ class App extends React.Component {
   
     const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
     fetchData.then(data => {
-  
-      // Convert API data into a normazlied format
-      this.setState({worldData: api1ConvertWorldData(data[0])});
-      this.setState({countryData: api1ConvertCountryData(data[1]['countries_stat'])});
+      this.setState({
+        worldData: api1ConvertWorldData(data[0]),
+        countryData: api1ConvertCountryData(data[1]['countries_stat'])
+      });
 
       // this.createAltSpellingsObj();
   
       // Enable UI when fetching data complete
-      this.setState({loading: false});
+      if (this.state.loading) this.setState({loading: false});
   
       // This will only trigger when both API requests return
       // We can now continue to modify the app
-      cb();
+      if (cb) cb();
     }).catch(error => {
       // Something went wrong with the API calls
       this.setState({error: true});
@@ -116,6 +117,49 @@ class App extends React.Component {
     // });
   }
 
+  // ------------
+  // Refresh data
+  // ------------
+
+  // const app = document.querySelector('.app');
+  // const refreshButton = document.querySelector('.button-refresh');
+  // const refreshButtonSvg = document.querySelector('.button-refresh__svg');
+  // let refreshIconRotation = 0;
+
+  // refreshButton.addEventListener('click', refreshUI);
+  // refreshButtonSvg.addEventListener('transitionend', continueSpinning);
+
+  // function refreshUI() {
+  //   app.classList.add('app--refreshing');
+
+  //   // Start the rotate button spinning
+  //   // When the data comes back, make sure the last spin gets to finish
+  //   refreshIconRotation += 360;
+  //   refreshButtonSvg.style.transform = `rotate(${refreshIconRotation}deg)`;
+
+  //   updateData(initializeState);
+  // }
+
+  refreshData = (svg) => {
+    if (this.state.refreshing) return;
+
+    this.setState({refreshing: true}, () => {
+      this.updateData(() => {
+        setTimeout(() => {
+          this.setState({refreshing: false});
+        }, 1000);
+      });
+    });
+  }
+
+  // -------------------
+  // On component update
+  // -------------------
+
+  // componentDidUpdate() {
+  //   console.log('component did update');
+  // }
+  
   // ----------------
   // Add a Country
   // ----------------
@@ -175,7 +219,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="app">
+      <div className={`app ${this.state.refreshing ? 'app--refreshing' : ''}`}>
         <div className="app__header">
           <CountryToggle state={this.state} toggleList={this.toggleList} />
         </div>
@@ -199,7 +243,7 @@ class App extends React.Component {
           {this.state.activeTab === 'my-countries' &&
            !this.state.loading &&
            !this.state.error &&
-            <div className="my-countries countries">
+            <div className={`my-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
 
               <CountryRow key="global" placeData={this.state.worldData} />
 
@@ -216,7 +260,7 @@ class App extends React.Component {
           {this.state.activeTab === 'all-countries' &&
            !this.state.loading &&
            !this.state.error &&
-            <div className="all-countries countries">
+           <div className={`all-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
 
               <CountryRow key="global" placeData={this.state.worldData} />
 
@@ -235,7 +279,7 @@ class App extends React.Component {
            !this.state.error &&
             <CountryForm state={this.state} addCountry={this.addCountry}/>
           }
-          <RefreshButton />
+          <RefreshButton refreshData={this.refreshData} state={this.state} />
         </div>
   
       </div>

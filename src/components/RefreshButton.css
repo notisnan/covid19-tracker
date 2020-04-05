@@ -10,10 +10,21 @@
   width: 20px;
   height: 20px;
   fill: #808aa2;
-  transition: fill 0.2s, transform 1s;
+  /* transition: fill 0.2s, transform 1s; */
+  animation: spin 0.6s infinite linear;
+  animation-play-state: paused;
+}
+
+.app--refreshing .button-refresh svg {
+  animation-play-state: running;
 }
 
 .button-refresh:hover svg,
 .app--refreshing .button-refresh svg {
   fill: #a2afcd;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
