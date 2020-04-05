@@ -8,16 +8,17 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 
 // Components
-import CountryToggle from './components/CountryToggle.js';
-import CountriesHeadings from './components/CountriesHeadings.js';
-import CountryForm from './components/CountryForm.js';
-import RefreshButton from './components/RefreshButton.js';
-import CountryRow from './components/CountryRow.js';
-import headers from './headers.js';
+import CountryToggle from './components/CountryToggle';
+import CountriesHeadings from './components/CountriesHeadings';
+import CountryForm from './components/CountryForm';
+import RefreshButton from './components/RefreshButton';
+import CountryRow from './components/CountryRow';
+import headers from './headers';
 
 // Helper Functions
-import sortCountries from './helpers/sortCountries.js';
+import sortCountries from './helpers/sortCountries';
 import {api1ConvertWorldData, api1ConvertCountryData} from './helpers/api1ConvertData';
+import getTopFourConfirmedCountries from './helpers/getTopFourConfirmedCountries';
 
 // Images
 import loader from './images/loader.gif';
@@ -84,23 +85,6 @@ class App extends React.Component {
     });
   }
 
-  // -------------------------------------------------------------------------------------
-  // If user had no preferences, populate my countries list with top 4 confirmed countries
-  // -------------------------------------------------------------------------------------
-
-  populateDefaultCountries = () => {
-    const mostCasesArray = ['botswana', 'botswana', 'botswana', 'botswana'];
-    for (let key in this.state.countryData) {  
-      const leastCase = this.getSmallestValue(mostCasesArray);
-      if (this.state.countryData[leastCase].cases < this.state.countryData[key].cases) {
-        const indexOfLeastCase = mostCasesArray.indexOf(leastCase);
-        mostCasesArray[indexOfLeastCase] = this.state.countryData[key].title.toLowerCase();
-      }
-    }
-
-    return mostCasesArray;
-  }
-
   // --------------------------------------------------------
   // HELPER: returns the smallest element of the passed array 
   // --------------------------------------------------------
@@ -128,7 +112,9 @@ class App extends React.Component {
 
     // chrome.storage.sync.get('userStorage', function (result) {
     //   if (!result.userStorage) {
-    //     userStorage.countries = populateDefaultCountries();
+    //     const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+    //     newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
+    //     this.setState({userStorage: newUserStorage});
     //     chrome.storage.sync.set({ 'userStorage': userStorage });
     //     // console.log('User had no preferences saved.');
     //   }
