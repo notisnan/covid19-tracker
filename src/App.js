@@ -38,6 +38,7 @@ class App extends React.Component {
       refreshing: false,
       worldData: {},
       countryData: {},
+      countryList: [],
       error: false,
       activeTab: 'my-countries',
       userStorage: {
@@ -70,9 +71,14 @@ class App extends React.Component {
   
     const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
     fetchData.then(data => {
+      const newWorldData = api1ConvertWorldData(data[0]);
+      const newCountryData = api1ConvertCountryData(data[1]['countries_stat']);
+      const newCountryList = sortCountries(Object.keys(newCountryData), newCountryData);
+
       this.setState({
-        worldData: api1ConvertWorldData(data[0]),
-        countryData: api1ConvertCountryData(data[1]['countries_stat'])
+        worldData: newWorldData,
+        countryData: newCountryData,
+        countryList: newCountryList
       });
 
       // this.createAltSpellingsObj();
@@ -275,10 +281,10 @@ class App extends React.Component {
 
               <CountryRow key="global" placeData={this.state.worldData} />
 
-              {Object.values(this.state.countryData).map(countryData => (
+              {this.state.countryList.map(countryName => (
                 <CountryRow
-                  key={countryData.title}
-                  placeData={countryData}
+                  key={countryName}
+                  placeData={this.state.countryData[countryName]}
                 />
               ))}
             </div>
