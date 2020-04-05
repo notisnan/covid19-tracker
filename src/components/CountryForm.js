@@ -1,6 +1,9 @@
 import React from 'react';
 import './CountryForm.css';
 
+// Transition group: https://reactcommunity.org/react-transition-group/
+import { CSSTransition } from 'react-transition-group';
+
 class CountryForm extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +17,15 @@ class CountryForm extends React.Component {
   render() {
     return (
       <form className="country-form" onSubmit={(e) => e.preventDefault()}>
-        <div className="country-form__error">Country is already in your list</div>
+        <CSSTransition
+          in={this.props.state.inputError}
+          exit={true}
+          unmountOnExit
+          timeout={200}
+          classNames="country-form__error-"
+        >
+          <div className="country-form__error">{this.props.state.inputErrorMessage}</div>
+        </CSSTransition>
         <input type="text" placeholder="Country Name" className="country-form__input" ref={this.countryInputElement}/>
         <button className="country-form__button" onClick={this.onCountryAdd}>Add</button>
       </form>

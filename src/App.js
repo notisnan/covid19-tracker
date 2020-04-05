@@ -1,11 +1,10 @@
 import React from 'react';
 import './App.css';
 
-// Custom Scrollbars
+// Custom Scrollbars: https://github.com/KingSora/OverlayScrollbars/tree/master/packages/overlayscrollbars-react
 import './css/OverlayScrollbars.css';
 import './css/os-theme-thick-light.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-
 
 // Components
 import CountryToggle from './components/CountryToggle';
@@ -17,7 +16,7 @@ import headers from './headers';
 
 // Helper Functions
 import sortCountries from './helpers/sortCountries';
-import {api1ConvertWorldData, api1ConvertCountryData} from './helpers/api1ConvertData';
+import { api1ConvertWorldData, api1ConvertCountryData } from './helpers/api1ConvertData';
 import getTopFourConfirmedCountries from './helpers/getTopFourConfirmedCountries';
 
 // Images
@@ -39,7 +38,9 @@ class App extends React.Component {
       activeTab: 'my-countries',
       userStorage: {
         countries: ['canada', 'usa']
-      }
+      },
+      inputError: false,
+      inputErrorMessage: ''
     };
   }
 
@@ -125,13 +126,23 @@ class App extends React.Component {
 
     if (this.state.countryData.hasOwnProperty(inputValue)) {
       if (this.state.userStorage.countries.includes(inputValue)) {
-        //TODO: Error pop-up: You already have that country 
+        this.setState({inputError: true, inputErrorMessage: 'Country is already in your list'}, hideErrorMessage);
         return;
       }
+
       const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
       newUserStorage.countries.push(inputValue);
       this.setState({userStorage: newUserStorage});
       countryElement.value = "";
+    } else {
+      // Country doesn't exist in our global countries list
+      this.setState({inputError: true, inputErrorMessage: 'Invalid country name'}, hideErrorMessage);
+    }
+
+    function hideErrorMessage() {
+      setTimeout(() => {
+        this.setState({inputError: false});
+      }, 1000);
     }
   } 
 
@@ -140,7 +151,6 @@ class App extends React.Component {
   // ----------------
 
   deleteCountry = (countryKey) => {
-    console.log(countryKey);
     for (let i=0; i < this.state.userStorage.countries.length; i++) {
       if (this.state.countryData[this.state.userStorage.countries[i]].title.toLowerCase() === countryKey) {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
@@ -223,7 +233,7 @@ class App extends React.Component {
         <div className="app__footer">
           {this.state.activeTab === 'my-countries' &&
            !this.state.error &&
-            <CountryForm addCountry={this.addCountry}/>
+            <CountryForm state={this.state} addCountry={this.addCountry}/>
           }
           <RefreshButton />
         </div>

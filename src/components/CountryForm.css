@@ -6,10 +6,6 @@
   position: relative;
 }
 
-.app--all-countries .country-form {
-  display: none;
-}
-
 .country-form__input {
   background: #252a3d;
   border: 1px solid #535969;
@@ -19,8 +15,8 @@
   letter-spacing: 0.025em;
   padding: 8px 9px;
   outline: none;
-  z-index: 20;
   position: relative;
+  z-index: 10;
 }
 
 .country-form__button {
@@ -40,6 +36,10 @@
   background: #53ffc7;
 }
 
+/* ------------------- */
+/* Country form errors */
+/* ------------------- */
+
 .country-form__error {
   background: #f1aa9b;
   border-radius: 5px;
@@ -48,23 +48,13 @@
   padding: 10px 20px;
   white-space: nowrap;
   text-align: center;
-  z-index: 10;
-  /* Positioning it off screen allows us to animate the item in */
-  /* If you display none/block you won't be able to animate it */
+  position: relative;
   position: absolute;
-  bottom: 9999px;
-  left: -9999px;
-  transform: translateY(20px);
-  opacity: 0;
-  transition: left 0s ease 0.8s, bottom 0s ease 0.8s, opacity 0.2s, transform 0.2s;
-}
-
-.country-form--error .country-form__error {
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 14px);
   left: 0;
-  transform: translateY(0);
-  opacity: 1;
-  transition: left 0s ease 0s, bottom 0s ease 0s, transform 0.4s, opacity 0.4s;
+  z-index: 10;
+  display: none;
+  transition: opacity 0.4s, transform 0.4s;
 }
 
 .country-form__error::after {
@@ -77,4 +67,39 @@
   border-top: 6px solid #f1aa9b;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
+}
+
+/* --------------------- */
+/* Input error animation */
+/* --------------------- */
+
+.country-form__error--enter {
+  opacity: 0;
+  transform: translateY(20px);
+  display: block;
+}
+
+.country-form__error--enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--enter-done {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--exit {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  display: block;
+  transition: opacity 0.2s, transform 0.2s;
 }
