@@ -19,8 +19,6 @@ class CountryForm extends React.Component {
       <form className={`country-form ${this.props.state.refreshing ? 'country-form--diabled' : ''}`} onSubmit={(e) => e.preventDefault()}>
         <CSSTransition
           in={this.props.state.inputError}
-          exit={true}
-          unmountOnExit
           timeout={200}
           classNames="country-form__error-"
         >

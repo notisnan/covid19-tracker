@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 
+// Transition group: https://reactcommunity.org/react-transition-group/
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 // Custom Scrollbars: https://github.com/KingSora/OverlayScrollbars/tree/master/packages/overlayscrollbars-react
 import './css/OverlayScrollbars.css';
 import './css/os-theme-thick-light.css';
@@ -247,13 +250,20 @@ class App extends React.Component {
 
               <CountryRow key="global" placeData={this.state.worldData} />
 
-              {this.state.userStorage.countries.map(countryName => (
-                <CountryRow 
-                  key={countryName}
-                  placeData={this.state.countryData[countryName]}
-                  deleteCountry={this.deleteCountry}
-                />
-              ))}
+              <TransitionGroup component={null}>
+                {this.state.userStorage.countries.map(countryName => (
+                  <CSSTransition
+                    key={countryName}
+                    timeout={{enter: 1000, exit: 0}}
+                    classNames="country-"
+                  >
+                    <CountryRow 
+                      placeData={this.state.countryData[countryName]}
+                      deleteCountry={this.deleteCountry}
+                    />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
             </div>   
           }
           
