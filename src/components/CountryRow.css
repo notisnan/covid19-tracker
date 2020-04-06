@@ -84,14 +84,13 @@
 /* Buttons */
 /* ------- */
 
-.remove-country {
+.remove-country,
+.add-country {
   position: absolute;
-  top: 50%;
+  top: calc(50% - 12px);
   left: -12px;
-  transform: translateY(-50%);
   width: 24px;
   height: 24px;
-  background: #ff4384;
   border: 0;
   padding: 0;
   display: flex;
@@ -103,21 +102,39 @@
   transition: opacity 0.2s;
 }
 
-.country:hover .remove-country { opacity: 1; }
-
-.remove-country--hidden,
-.all-countries .remove-country {
-  display: none;
+.remove-country {
+  background: #ff4384;
 }
 
-.remove-country svg {
+.add-country {
+  background: #43cea1;
+}
+
+.country:hover .remove-country,
+.country:hover .add-country { opacity: 1; }
+.all-countries .remove-country { display: none; }
+
+.remove-country svg,
+.add-country svg {
   fill: #121629;
   width: 10px;
   height: 10px;
   transition: transform 0.4s;
 }
 
+.add-country svg { transform: rotate(45deg); }
+
 .remove-country:hover svg { transform: rotate(90deg); }
+.add-country:hover svg { transform: rotate(135deg); }
+
+.add-country--exit {
+  transform: scale(1);
+}
+
+.add-country--exit-active {
+  transform: scale(0);
+  transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+}
 
 /* --------------------- */
 /* Country row animation */

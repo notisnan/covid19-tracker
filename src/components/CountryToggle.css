@@ -3,6 +3,7 @@
   display: flex;
   border-radius: 17px;
   position: relative;
+  overflow: hidden;
 }
 
 .country-toggle::after {
