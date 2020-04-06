@@ -13,7 +13,6 @@ body {
   align-items: flex-start;
   justify-content: flex-end;
   font-family: 'Roboto', sans-serif;
-  background: #000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -8,6 +8,7 @@
   margin-bottom: 18px;
   margin-right: 10px;
   padding: 0 20px;
+  user-select: none;
 }
 
 .header__item {
@@ -18,8 +19,44 @@
   padding-right: 14px;
   display: flex;
   justify-content: flex-end;
+  position: relative;
+  cursor: pointer;
 }
 
 .header__item--confirmed { color: #f4943e; }
 .header__item--deaths { color: #fa502f; }
 .header__item--recovered { color: #36d3da; }
+
+/* Arrow */
+
+.header__item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #b3c1ff;
+  opacity: 0;
+  transition: transform 0.4s;
+}
+
+.header__item--active::after { opacity: 1; }
+.header__item--low-high::after { transform: translateY(-50%) rotate(180deg); }
+
+/* Underline */
+
+.header__item--active span { position: relative; }
+.header__item--active span::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 1px;
+  background: #3e4767;
+}

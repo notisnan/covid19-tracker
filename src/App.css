@@ -11,7 +11,7 @@
 }
 
 .app__header {
-  background: #252a3d;
+  background: #1a4ed0;
   margin-bottom: 18px;
   padding: 18px 20px;
   display: flex;
@@ -27,7 +27,7 @@
 .app__footer {
   display: flex;
   margin-top: 5px;
-  padding: 0 20px 15px;
+  padding: 10px 20px 15px;
   min-height: 48px;
   position: relative;
   z-index: 100;

@@ -17,7 +17,6 @@ import CountryRow from './components/CountryRow';
 import headers from './headers';
 
 // Helper Functions
-import sortCountries from './helpers/sortCountries';
 import { api1ConvertWorldData, api1ConvertCountryData } from './helpers/api1ConvertData';
 import getTopFourConfirmedCountries from './helpers/getTopFourConfirmedCountries';
 
@@ -35,7 +34,6 @@ class App extends React.Component {
     this.state = {
       loading: true,
       refreshing: false,
-      worldData: {},
       countryData: {},
       alternateSpellings: {},
       countryList: [],
@@ -45,7 +43,11 @@ class App extends React.Component {
         countries: []
       },
       inputError: false,
-      inputErrorMessage: ''
+      inputErrorMessage: '',
+      sort: {
+        column: '',
+        highLow: true
+      }
     };
   }
 
@@ -55,6 +57,43 @@ class App extends React.Component {
 
   componentDidMount() {
     this.updateData(this.initializeState);
+  }
+
+  // ---------
+  // Sort data
+  // ---------
+
+  sortData = (array, countries, column, flipData, highLow = this.state.sort.highLow) => {
+    const sortedArray = JSON.parse(JSON.stringify(array));
+
+    if (!flipData) {
+      if (column === this.state.sort.column) highLow = !this.state.sort.highLow;
+    }
+    
+    if (highLow) {
+      
+      // High to low
+      if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases - countries[a].cases );
+      } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths - countries[a].deaths );
+      } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].total_recovered - countries[a].total_recovered );}
+
+    } else {
+
+      // Low to high
+      if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases - countries[b].cases );
+      } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths - countries[b].deaths );
+      } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].total_recovered - countries[b].total_recovered ); }
+
+    }
+
+    this.setState({
+      sort: {
+        column: column,
+        highLow: highLow
+      }
+    });
+
+    return sortedArray;
   }
 
   // -------------------------
@@ -71,9 +110,10 @@ class App extends React.Component {
   
     const fetchData = Promise.all([fetchGlobalData, fetchCountryData]);
     fetchData.then(data => {
-      const newWorldData = api1ConvertWorldData(data[0]);
       const newCountryData = api1ConvertCountryData(data[1]['countries_stat']);
-      const newCountryList = sortCountries(Object.keys(newCountryData), newCountryData);
+      newCountryData['global'] = api1ConvertWorldData(data[0]);
+      const newCountryList = this.sortData(Object.keys(newCountryData), newCountryData, this.state.sort.column || 'confirmed', true);      
+      
       const newAlternateSpellings = {
         'us': newCountryData['usa'],
         'united states': newCountryData['usa'],
@@ -83,11 +123,11 @@ class App extends React.Component {
       };
 
       this.setState({
-        worldData: newWorldData,
         countryData: newCountryData,
         countryList: newCountryList,
         alternateSpellings: newAlternateSpellings
-      }, () => {
+      }, () => {        
+        
         // Enable UI when fetching data complete
         if (this.state.loading) {
           this.setState({
@@ -96,10 +136,10 @@ class App extends React.Component {
             refreshing: false
           });
         }
-    
+
         // This will only trigger when both API requests return
         // We can now continue to modify the app
-        if (cb) cb();      
+        if (cb) cb();
       });
     }).catch(error => {
       // Something went wrong with the API calls
@@ -126,22 +166,40 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    // const sortedCountries = sortCountries(['canada', 'usa'], this.state.countryData);
-    // this.setState({userStorage: {countries: sortedCountries}});
+    // let myTempCountries = ['canada', 'usa', 'global'];
+    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    // this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
     chrome.storage.sync.get('userStorage', (result) => {
       if (!result.userStorage) {
-        const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
-        newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
+        const newUserStorage = {
+          countries: getTopFourConfirmedCountries(this.state.countryData)
+        };
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+        
         this.setState({userStorage: newUserStorage});
         chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
       else {
-        this.setState({userStorage: result.userStorage});
+        const newUserStorage = result.userStorage;
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+        this.setState({userStorage: newUserStorage});
       }
     });
+  }
+
+  // -----------------------
+  // Should component update
+  // -----------------------
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    if (!nextState.userStorage.countries.length) {
+      return false;
+    }
+
+    return true;
   }
 
   // ------------
@@ -181,7 +239,8 @@ class App extends React.Component {
 
       const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
       newUserStorage.countries.push(inputValue);
-      newUserStorage.countries = sortCountries(newUserStorage.countries, this.state.countryData);
+      newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+
       this.setState({userStorage: newUserStorage});
       chrome.storage.sync.set({ 'userStorage': newUserStorage });
       countryElement.value = "";
@@ -231,7 +290,7 @@ class App extends React.Component {
           <CountryToggle state={this.state} toggleList={this.toggleList} />
         </div>
   
-        <CountriesHeadings />
+        <CountriesHeadings sortData={this.sortData} state={this.state} app={this} />
     
         <OverlayScrollbarsComponent options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
           {this.state.loading &&
@@ -251,9 +310,6 @@ class App extends React.Component {
            !this.state.loading &&
            !this.state.error &&
             <div className={`my-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
-
-              <CountryRow placeData={this.state.worldData} />
-
               {this.state.userStorage.countries.map(countryName => (
                 <CountryRow 
                   key={countryName}
@@ -268,9 +324,6 @@ class App extends React.Component {
            !this.state.loading &&
            !this.state.error &&
            <div className={`all-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
-
-              <CountryRow key="global" placeData={this.state.worldData} />
-
               {this.state.countryList.map(countryName => (
                 <CountryRow
                   key={countryName}
