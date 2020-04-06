@@ -126,22 +126,22 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    const sortedCountries = sortCountries(['canada', 'usa'], this.state.countryData);
-    this.setState({userStorage: {countries: sortedCountries}});
+    // const sortedCountries = sortCountries(['canada', 'usa'], this.state.countryData);
+    // this.setState({userStorage: {countries: sortedCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    // chrome.storage.sync.get('userStorage', (result) => {
-    //   if (!result.userStorage) {
-    //     const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
-    //     newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
-    //     this.setState({userStorage: newUserStorage});
-    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
-    //   }
-    //   else {
-    //     this.setState({userStorage: result.userStorage});
-    //   }
-    // });
+    chrome.storage.sync.get('userStorage', (result) => {
+      if (!result.userStorage) {
+        const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+        newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
+        this.setState({userStorage: newUserStorage});
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      }
+      else {
+        this.setState({userStorage: result.userStorage});
+      }
+    });
   }
 
   // ------------
@@ -182,7 +182,7 @@ class App extends React.Component {
       newUserStorage.countries.push(value);
       newUserStorage.countries = sortCountries(newUserStorage.countries, this.state.countryData);
       this.setState({userStorage: newUserStorage});
-      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      chrome.storage.sync.set({ 'userStorage': newUserStorage });
       if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -206,7 +206,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
