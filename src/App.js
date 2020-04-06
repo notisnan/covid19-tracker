@@ -89,7 +89,13 @@ class App extends React.Component {
         alternateSpellings: newAlternateSpellings
       }, () => {
         // Enable UI when fetching data complete
-        if (this.state.loading) this.setState({loading: false});
+        if (this.state.loading) {
+          this.setState({
+            loading: false,
+            error: false,
+            refreshing: false
+          });
+        }
     
         // This will only trigger when both API requests return
         // We can now continue to modify the app
@@ -97,7 +103,15 @@ class App extends React.Component {
       });
     }).catch(error => {
       // Something went wrong with the API calls
-      this.setState({error: true});
+      this.setState({
+        error: true,
+        loading: false
+      });
+
+      setTimeout(() => {
+        this.setState({refreshing: false});
+      }, 1000);
+
       console.log('ERROR: ', error);
     });
   }
