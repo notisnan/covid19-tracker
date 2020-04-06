@@ -41,7 +41,7 @@
 }
 
 .country-toggle__item:first-child { color: #fff; }
-.country-toggle--all .country-toggle__item:first-child { color: #b8bfd0; }
+.country-toggle--all .country-toggle__item:first-child { color: #808aa2; }
 .country-toggle--all .country-toggle__item:last-child { color: #fff; }
 
 .country-toggle__item:first-child { margin-right: -10px; }
