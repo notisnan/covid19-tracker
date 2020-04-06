@@ -29,6 +29,8 @@
   margin-top: 5px;
   padding: 0 20px 15px;
   min-height: 48px;
+  position: relative;
+  z-index: 100;
 }
 
 /* ------------ */

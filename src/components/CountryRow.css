@@ -123,13 +123,15 @@
 /* Country row animation */
 /* --------------------- */
 
-.country--enter {
+.country--enter,
+.country--appear {
   opacity: 0;
   transition: opacity 0.5s, background 1s;
   background: #717b91;
 }
 
-.country--enter-active {
+.country--enter-active,
+.country--appear-active {
   opacity: 1;
   background: #252a3d;
 }

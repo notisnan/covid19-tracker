@@ -1,8 +1,7 @@
+/*global chrome*/
+
 import React from 'react';
 import './App.css';
-
-// Transition group: https://reactcommunity.org/react-transition-group/
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 // Custom Scrollbars: https://github.com/KingSora/OverlayScrollbars/tree/master/packages/overlayscrollbars-react
 import './css/OverlayScrollbars.css';
@@ -43,7 +42,7 @@ class App extends React.Component {
       error: false,
       activeTab: 'my-countries',
       userStorage: {
-        countries: ['canada', 'usa']
+        countries: []
       },
       inputError: false,
       inputErrorMessage: ''
@@ -88,14 +87,14 @@ class App extends React.Component {
         countryData: newCountryData,
         countryList: newCountryList,
         alternateSpellings: newAlternateSpellings
+      }, () => {
+        // Enable UI when fetching data complete
+        if (this.state.loading) this.setState({loading: false});
+    
+        // This will only trigger when both API requests return
+        // We can now continue to modify the app
+        if (cb) cb();      
       });
-  
-      // Enable UI when fetching data complete
-      if (this.state.loading) this.setState({loading: false});
-  
-      // This will only trigger when both API requests return
-      // We can now continue to modify the app
-      if (cb) cb();
     }).catch(error => {
       // Something went wrong with the API calls
       this.setState({error: true});
@@ -105,32 +104,30 @@ class App extends React.Component {
 
   // ------------------------------------------------
   // Initialize country array based on local storage 
-      // TESTING OF SYNC STORAGE
-      // chrome.storage.sync.remove('userStorage');
   // ------------------------------------------------
 
   initializeState = () => {
-    const sortedCountries = sortCountries(this.state.userStorage.countries, this.state.countryData);
-    this.setState({userStorage: {countries: sortedCountries}});
+    // TESTING OF SYNC STORAGE
+    // chrome.storage.sync.remove('userStorage');
 
+    // REACT
+    // If running in react use the code below and comment out all instances of chrome storage
+    // const sortedCountries = sortCountries(['canada', 'usa'], this.state.countryData);
+    // this.setState({userStorage: {countries: sortedCountries}});
 
-    // If testing in react use the commented below and comment the rest of the code\
-
-    // chrome.storage.sync.get('userStorage', function (result) {
-    //   if (!result.userStorage) {
-    //     const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
-    //     newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
-    //     this.setState({userStorage: newUserStorage});
-    //     chrome.storage.sync.set({ 'userStorage': userStorage });
-    //     // console.log('User had no preferences saved.');
-    //   }
-    //   else {
-    //     userStorage = result.userStorage;
-    //     // console.log('User has preferences saved.');
-    //   }
-      
-    //   rebuildTable();
-    // });
+    // CHROME EXTENSION
+    // If running as Chrome extension, use the code below
+    chrome.storage.sync.get('userStorage', (result) => {
+      if (!result.userStorage) {
+        const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+        newUserStorage.countries = getTopFourConfirmedCountries(this.state.countryData);
+        this.setState({userStorage: newUserStorage});
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      }
+      else {
+        this.setState({userStorage: result.userStorage});
+      }
+    });
   }
 
   // ------------
@@ -172,6 +169,7 @@ class App extends React.Component {
       newUserStorage.countries.push(inputValue);
       newUserStorage.countries = sortCountries(newUserStorage.countries, this.state.countryData);
       this.setState({userStorage: newUserStorage});
+      chrome.storage.sync.set({ 'userStorage': newUserStorage });
       countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -195,7 +193,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        // chrome.storage.sync.set({ 'userStorage': userStorage });
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
@@ -240,22 +238,15 @@ class App extends React.Component {
            !this.state.error &&
             <div className={`my-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
 
-              <CountryRow key="global" placeData={this.state.worldData} />
+              <CountryRow placeData={this.state.worldData} />
 
-              <TransitionGroup component={null}>
-                {this.state.userStorage.countries.map(countryName => (
-                  <CSSTransition
-                    key={countryName}
-                    timeout={{enter: 1000, exit: 0}}
-                    classNames="country-"
-                  >
-                    <CountryRow 
-                      placeData={this.state.countryData[countryName]}
-                      deleteCountry={this.deleteCountry}
-                    />
-                  </CSSTransition>
-                ))}
-              </TransitionGroup>
+              {this.state.userStorage.countries.map(countryName => (
+                <CountryRow 
+                  key={countryName}
+                  placeData={this.state.countryData[countryName]}
+                  deleteCountry={this.deleteCountry}
+                />
+              ))}
             </div>   
           }
           
@@ -278,10 +269,13 @@ class App extends React.Component {
     
         <div className="app__footer">
           {this.state.activeTab === 'my-countries' &&
-           !this.state.error &&
+          !this.state.loading &&
+          !this.state.error &&
             <CountryForm state={this.state} addCountry={this.addCountry}/>
           }
-          <RefreshButton refreshData={this.refreshData} state={this.state} />
+          {!this.state.loading &&
+            <RefreshButton refreshData={this.refreshData} state={this.state} />
+          }
         </div>
   
       </div>
