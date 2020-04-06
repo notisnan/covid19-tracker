@@ -30,7 +30,7 @@ class CountryRow extends React.Component {
 
         <div className="statistic column-deaths">
           <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
-          <div className="statistic__change" dangerouslySetInnerHTML={{__html: calculatePercentage(country.new_cases, country.cases)}}></div>
+          <div className="statistic__change" dangerouslySetInnerHTML={{__html: calculatePercentage(country.new_deaths, country.deaths)}}></div>
         </div>
 
         <div className="statistic column-recovered">
