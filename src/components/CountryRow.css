@@ -18,6 +18,9 @@
   background: #424b6d;
 }
 
+.my-countries .country--global { background: #252a3d; }
+.my-countries .country--global:hover { background: #424b6d; }
+
 .country__name {
   color: #ffddb7;
   font-size: 15px;
