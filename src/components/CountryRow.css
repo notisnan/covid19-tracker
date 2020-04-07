@@ -12,8 +12,10 @@
   position: relative;
 }
 
-.country:hover {
-  background: #30364f;
+.country:hover,
+.all-countries .country--active,
+.country--global {
+  background: #424b6d;
 }
 
 .country__name {

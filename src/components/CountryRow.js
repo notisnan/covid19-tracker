@@ -19,7 +19,10 @@ class CountryRow extends React.Component {
     const country = this.props.placeData;
 
     return (
-      <div className="country">
+      <div className={`
+      ${(this.props.state.userStorage.countries.includes(country.title.toLowerCase())) ? 'country--active' : '' }
+      ${(country.title === 'Global') ? 'country--global' : ''}
+      country`}>
         {country.title !== 'Global' &&
           <button className="remove-country" onClick={this.deleteCountry}>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 14 14" style={{enableBackground: 'new 0 0 14 14'}} xmlSpace="preserve">
