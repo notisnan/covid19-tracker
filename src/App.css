@@ -44,6 +44,10 @@
   justify-content: center;
 }
 
+.app-message--active {
+  opacity: 1;
+}
+
 .app-message--errors {
   font-size: 13px;
   color: #f89079;
@@ -69,4 +73,35 @@
 .app--refreshing .countries {
   opacity: 0.5;
   pointer-events: none;
+}
+
+/* ------------------- */
+/* Countries animation */
+/* ------------------- */
+
+.app__body {
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.app__body--enter,
+.app__body--appear {
+  opacity: 0;
+}
+
+.app__body--enter-active,
+.app__body--appear-active {
+  opacity: 1;
+}
+
+.app__body--exit {
+  opacity: 1;
+}
+
+.app__body--exit-active {
+  opacity: 0;
+}
+
+.app__body--enter-done {
+  opacity: 1;
 }

@@ -8,6 +8,12 @@ import './css/OverlayScrollbars.css';
 import './css/os-theme-thick-light.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
+// Transition group: https://reactcommunity.org/react-transition-group/
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
+
+// GSAP: https://greensock.com/gsap/
+import { gsap } from 'gsap';
+
 // Components
 import CountryToggle from './components/CountryToggle';
 import CountriesHeadings from './components/CountriesHeadings';
@@ -22,6 +28,11 @@ import getTopFourConfirmedCountries from './helpers/getTopFourConfirmedCountries
 
 // Images
 import loader from './images/loader.gif';
+
+const previousState = {
+  state: null,
+  next: null
+}
 
 // ---
 // App
@@ -47,8 +58,11 @@ class App extends React.Component {
       sort: {
         column: '',
         highLow: true
-      }
+      },
+      animationInProgress: false
     };
+
+    this.scrollbar = React.createRef();
   }
 
   // -------------------
@@ -56,6 +70,7 @@ class App extends React.Component {
   // -------------------
 
   componentDidMount() {
+    // this.scrollbar.current._osInstance.sleep()
     this.updateData(this.initializeState);
   }
 
@@ -126,20 +141,20 @@ class App extends React.Component {
         countryData: newCountryData,
         countryList: newCountryList,
         alternateSpellings: newAlternateSpellings
-      }, () => {        
-        
+      }, () => {
         // Enable UI when fetching data complete
-        if (this.state.loading) {
+        if (this.state.loading || this.state.refreshing) {
           this.setState({
             loading: false,
             error: false,
             refreshing: false
+          }, () => {
+            // This will only trigger when both API requests return
+            // We can now continue to modify the app
+            if (cb) cb();
           });
         }
 
-        // This will only trigger when both API requests return
-        // We can now continue to modify the app
-        if (cb) cb();
       });
     }).catch(error => {
       // Something went wrong with the API calls
@@ -166,28 +181,28 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    // let myTempCountries = ['canada', 'usa', 'global'];
-    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
-    // this.setState({userStorage: {countries: myTempCountries}});
+    let myTempCountries = ['canada', 'usa', 'global'];
+    myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    chrome.storage.sync.get('userStorage', (result) => {
-      if (!result.userStorage) {
-        const newUserStorage = {
-          countries: getTopFourConfirmedCountries(this.state.countryData)
-        };
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    // chrome.storage.sync.get('userStorage', (result) => {
+    //   if (!result.userStorage) {
+    //     const newUserStorage = {
+    //       countries: getTopFourConfirmedCountries(this.state.countryData)
+    //     };
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
         
-        this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
-      }
-      else {
-        const newUserStorage = result.userStorage;
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-        this.setState({userStorage: newUserStorage});
-      }
-    });
+    //     this.setState({userStorage: newUserStorage});
+    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
+    //   }
+    //   else {
+    //     const newUserStorage = result.userStorage;
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    //     this.setState({userStorage: newUserStorage});
+    //   }
+    // });
   }
 
   // -----------------------
@@ -195,9 +210,7 @@ class App extends React.Component {
   // -----------------------
 
   shouldComponentUpdate = (nextProps, nextState) => {
-    if (!nextState.userStorage.countries.length) {
-      return false;
-    }
+    if (!nextState.userStorage.countries.length) return false;
 
     return true;
   }
@@ -241,7 +254,7 @@ class App extends React.Component {
       newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
       this.setState({userStorage: newUserStorage});
-      chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
       if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -265,7 +278,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
@@ -275,6 +288,9 @@ class App extends React.Component {
   // -----------------------------------
 
   toggleList = () => {
+    if (this.state.animationInProgress) return;
+    this.setState({ animationInProgress: true });
+
     if (this.state.activeTab === 'my-countries') {
       this.setState({activeTab: 'all-countries'});
     } else {
@@ -282,7 +298,49 @@ class App extends React.Component {
     }
   }
 
+  // --------------
+  // Footer Content
+  // --------------
+
+  footerContent = () => {
+    if (this.state.activeTab === 'my-countries' && !this.state.loading && !this.state.error) {
+      return (
+        <>
+          <CountryForm state={this.state} addCountry={this.addCountry}/>
+          <RefreshButton refreshData={this.refreshData} state={this.state} />
+        </>
+      );
+    }
+
+    if (!this.state.loading) {
+      return <RefreshButton refreshData={this.refreshData} state={this.state} />;
+    }
+  }
+
+  // -----------------------
+  // App body grow animation
+  // -----------------------
+
+  growAnimation = (e) => {
+    const child = e.querySelector('.my-countries');
+    const newHeight = this.state.userStorage.countries.length > 6 ? 400 : (this.state.userStorage.countries.length * 63) - 10 ;
+
+    if (child) {
+      // Animation from small to big
+      gsap.to(e, {duration: 0.3, height: 400, ease: "power3.out"});
+    } else {
+      // Animation from big to small
+      gsap.to(e, {duration: 0.3, height: newHeight, ease: "power3.out"});
+    }
+  }
+  
+  // ------
+  // Render
+  // ------
+
   render() {
+    const countries = (this.state.activeTab === 'my-countries') ? this.state.userStorage.countries : this.state.countryList  ;
+
     return (
       <div className={`app ${this.state.refreshing ? 'app--refreshing' : ''}`} ref={this.appElement}>
         <div className="app__header">
@@ -291,61 +349,51 @@ class App extends React.Component {
   
         <CountriesHeadings sortData={this.sortData} state={this.state} app={this} />
     
-        <OverlayScrollbarsComponent options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
-          {this.state.loading &&
-            <div className="app-message">
-              <img src={loader} alt=""/>
-            </div>
-          }
-          
-          {this.state.error &&
-            <div className="app-message app-message--errors">
-              Data currently unavailable,<br />
-              please check back later.
-            </div>
-          }
+        <SwitchTransition>
+          <CSSTransition
+          key={this.state.activeTab}
+          timeout={400}
+          appear={true}
+          onExiting={this.growAnimation}
+          onEntered={() => this.setState({ animationInProgress: false })}
+          classNames='app__body-'>
+            <OverlayScrollbarsComponent ref={this.scrollbar} options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
+              {this.state.loading &&
+                <div className={`app-message ${this.state.loading ? 'app-message--active' : ''}`}>
+                  <img src={loader} alt=""/>
+                </div>
+              }
+              
+              {this.state.error &&
+                <div className="app-message app-message--errors">
+                  Data currently unavailable,<br />
+                  please check back later.
+                </div>
+              }
 
-          {this.state.activeTab === 'my-countries' &&
-           !this.state.loading &&
-           !this.state.error &&
-            <div className={`my-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
-              {this.state.userStorage.countries.map(countryName => (
-                <CountryRow 
-                  key={countryName}
-                  state={this.state}
-                  placeData={this.state.countryData[countryName]}
-                  deleteCountry={this.deleteCountry}
-                />
-              ))}
-            </div>   
-          }
-          
-          {this.state.activeTab === 'all-countries' &&
-           !this.state.loading &&
-           !this.state.error &&
-           <div className={`all-countries countries ${this.state.refershing ? 'countries--disabled' : ''}`}>
-              {this.state.countryList.map(countryName => (
-                <CountryRow
-                  key={countryName}
-                  app={this}
-                  state={this.state}
-                  placeData={this.state.countryData[countryName]}
-                  addCountry={this.addCountry}
-                />
-              ))}
-            </div>
-          }
-        </OverlayScrollbarsComponent>
+              
+                  <div className={`
+                  countries
+                  ${this.state.activeTab === 'my-countries' ? 'my-countries' : 'all-countries'}
+                  ${this.state.refershing ? 'countries--disabled' : ''}`}>
+                    {countries.map(countryName => (
+                      <CountryRow 
+                        key={countryName}
+                        app={this}
+                        state={this.state}
+                        placeData={this.state.countryData[countryName]}
+                        addCountry={this.addCountry}
+                        deleteCountry={this.deleteCountry}
+                      />
+                    ))}
+                  </div>
+                
+            </OverlayScrollbarsComponent>
+          </CSSTransition>    
+        </SwitchTransition>
     
         <div className="app__footer">
-          {this.state.activeTab === 'my-countries' &&
-          !this.state.loading &&
-          !this.state.error &&
-            <CountryForm state={this.state} addCountry={this.addCountry}/>
-          }
-          {!this.state.loading &&
-            <RefreshButton refreshData={this.refreshData} state={this.state} />
-          }
+          {this.footerContent()}
         </div>
 
       </div>
