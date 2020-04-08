@@ -166,28 +166,28 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    // let myTempCountries = ['canada', 'usa', 'global'];
-    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
-    // this.setState({userStorage: {countries: myTempCountries}});
+    let myTempCountries = ['canada', 'usa', 'global'];
+    myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    chrome.storage.sync.get('userStorage', (result) => {
-      if (!result.userStorage) {
-        const newUserStorage = {
-          countries: getTopFourConfirmedCountries(this.state.countryData)
-        };
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    // chrome.storage.sync.get('userStorage', (result) => {
+    //   if (!result.userStorage) {
+    //     const newUserStorage = {
+    //       countries: getTopFourConfirmedCountries(this.state.countryData)
+    //     };
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
         
-        this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
-      }
-      else {
-        const newUserStorage = result.userStorage;
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-        this.setState({userStorage: newUserStorage});
-      }
-    });
+    //     this.setState({userStorage: newUserStorage});
+    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
+    //   }
+    //   else {
+    //     const newUserStorage = result.userStorage;
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    //     this.setState({userStorage: newUserStorage});
+    //   }
+    // });
   }
 
   // -----------------------
@@ -222,28 +222,27 @@ class App extends React.Component {
   // Add a Country
   // ----------------
 
-  addCountry = (countryElement) => {
-    let inputValue = countryElement.value.toLowerCase();
+  addCountry = (countryElement, value) => {
 
     // check to see if this is an alternate spelling
-    if (this.state.alternateSpellings.hasOwnProperty(inputValue)) {
-      inputValue = this.state.alternateSpellings[inputValue].title.toLowerCase();
+    if (this.state.alternateSpellings.hasOwnProperty(value)) {
+      value = this.state.alternateSpellings[value].title.toLowerCase();
     }
 
     // check if country exists in countryData or alternateSpellings
-    if (this.state.countryData.hasOwnProperty(inputValue)) {
-      if (this.state.userStorage.countries.includes(inputValue)) {
+    if (this.state.countryData.hasOwnProperty(value)) {
+      if (this.state.userStorage.countries.includes(value)) {
         this.setState({inputError: true, inputErrorMessage: 'Country is already in your list'}, hideErrorMessage);
         return;
       }
 
       const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
-      newUserStorage.countries.push(inputValue);
+      newUserStorage.countries.push(value);
       newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
       this.setState({userStorage: newUserStorage});
-      chrome.storage.sync.set({ 'userStorage': newUserStorage });
-      countryElement.value = "";
+      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
       this.setState({inputError: true, inputErrorMessage: 'Invalid country name'}, hideErrorMessage);
@@ -266,7 +265,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
@@ -285,9 +284,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className={`app ${this.state.refreshing ? 'app--refreshing' : ''}`}>
+      <div className={`app ${this.state.refreshing ? 'app--refreshing' : ''}`} ref={this.appElement}>
         <div className="app__header">
-          <CountryToggle state={this.state} toggleList={this.toggleList} />
+          <CountryToggle app={this} toggleList={this.toggleList} state={this.state} />
         </div>
   
         <CountriesHeadings sortData={this.sortData} state={this.state} app={this} />
@@ -313,6 +312,7 @@ class App extends React.Component {
               {this.state.userStorage.countries.map(countryName => (
                 <CountryRow 
                   key={countryName}
+                  state={this.state}
                   placeData={this.state.countryData[countryName]}
                   deleteCountry={this.deleteCountry}
                 />
@@ -327,7 +327,10 @@ class App extends React.Component {
               {this.state.countryList.map(countryName => (
                 <CountryRow
                   key={countryName}
+                  app={this}
+                  state={this.state}
                   placeData={this.state.countryData[countryName]}
+                  addCountry={this.addCountry}
                 />
               ))}
             </div>
@@ -344,7 +347,7 @@ class App extends React.Component {
             <RefreshButton refreshData={this.refreshData} state={this.state} />
           }
         </div>
-  
+
       </div>
     );
   };
