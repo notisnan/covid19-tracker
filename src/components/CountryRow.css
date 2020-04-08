@@ -16,8 +16,9 @@
   margin-top: 0;
 }
 
-.country:hover {
-  background: #30364f;
+.country:hover,
+.all-countries .country--active {
+  background: #424b6d;
 }
 
 .my-countries .country--global { background: #252a3d; }
