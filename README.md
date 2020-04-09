@@ -4,18 +4,27 @@ A Chrome extension to show important COVID-19 global and local information.
 
 [Available on the Chrome Store](https://chrome.google.com/webstore/detail/dccmmkjdbpdlcallijclmjkhmpciajdj/).
 
-<img src="art/banner.jpg" width="400">
+<img src="./banner.jpg" width="400">
 
 ## Features
-- Ability to customize countries.
-- Data is refreshed automatically and can be refreshed on-demand.
-- Initialized with the top five countries with highest confirmed cases.
+- Initialized with global stats and the top four countries with highest confirmed cases.
+- Ability to curate the list of countries you want to keep an eye on.
+- Data is refreshed each time extension is opened and can be refreshed manually with one click.
+- Ability to sort the data by clicking on the headings.
+- Panel to view data from all reporting countries at the same time.
+- Your country data will persist between Chrome sessions by being stored in Chrome sync storage.
 
-## Technical Details
-- Consuming the JSON data from the [virustracker](https://thevirustracker.com/api) API.
-- Usage of Sync Storage for user country preferences.
-<br><br>
+
+## Data
+We are consuming the data from the [Corona Virus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
+
+API information is updated on 10 minute intervals and consumes the data from [Johns Hopkins](https://coronavirus.jhu.edu/map.html) or [Worldometer](https://www.worldometers.info/coronavirus/) depending on which one has the most up to date information.
+
+<br>
+
 ----
+
+<br>
 
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
 

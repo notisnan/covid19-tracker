@@ -1,0 +1,102 @@
+/* ---------------- */
+/* Add country form */
+/* ---------------- */
+
+.country-form { position: relative; }
+.country-form--diabled { pointer-events: none; }
+
+.country-form__input {
+  background: #252a3d;
+  border: 1px solid #535969;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  padding: 8px 9px;
+  outline: none;
+  position: relative;
+  z-index: 10;
+}
+
+.country-form__button {
+  background: #47c293;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #121629;
+  border: 0;
+  padding: 9px 16px;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.country-form__button:hover { background: #53ffc7; }
+
+/* ------------------- */
+/* Country form errors */
+/* ------------------- */
+
+.country-form__error {
+  background: #f1aa9b;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #101425;
+  padding: 10px 20px;
+  white-space: nowrap;
+  text-align: center;
+  position: relative;
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 0;
+  z-index: 10;
+  display: none;
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.country-form__error::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid #f1aa9b;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}
+
+/* --------------------- */
+/* Input error animation */
+/* --------------------- */
+
+.country-form__error--enter {
+  opacity: 0;
+  transform: translateY(20px);
+  display: block;
+}
+
+.country-form__error--enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--enter-done {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--exit {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.country-form__error--exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  display: block;
+  transition: opacity 0.2s, transform 0.2s;
+}

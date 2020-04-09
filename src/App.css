@@ -1,0 +1,72 @@
+.app {
+  background: #0e1120;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 480px;
+}
+
+.app--disabled {
+  pointer-events: none;
+}
+
+.app__header {
+  background: #1a4ed0;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app__body {
+  padding: 0 20px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.app__footer {
+  display: flex;
+  margin-top: 5px;
+  padding: 10px 20px 15px;
+  min-height: 48px;
+  position: relative;
+  z-index: 100;
+}
+
+/* ------------ */
+/* App messages */
+/* ------------ */
+
+.app-message {
+  height: 189px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-message--errors {
+  font-size: 13px;
+  color: #f89079;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ------------ */
+/* Column Sizes */
+/* ------------ */
+
+.column-confirmed { width: 104px; }
+.column-deaths { width: 100px; }
+.column-recovered { width: 104px; }
+
+/* ------------ */
+/* Country list */
+/* ------------ */
+
+.countries { transition: opacity 0.5s; }
+
+.app--refreshing .countries {
+  opacity: 0.5;
+  pointer-events: none;
+}
