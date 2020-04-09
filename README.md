@@ -28,8 +28,6 @@ API information is updated on 10 minute intervals and consumes the data from [Jo
 
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
 
-The Hackathon presentation is available [here](/presentation/hackathon-032820.pdf).
-
 We hope it brings awareness to the dangers of pandemic events to human civilization and the need to prepare.
 
 See [TED Talk: The Next Pandemic, we are not ready (Bill Gates).](https://www.youtube.com/watch?v=6Af6b_wyiwI)

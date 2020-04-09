@@ -16,10 +16,8 @@
   margin-top: 0;
 }
 
-.country:hover,
-.all-countries .country--active {
-  background: #424b6d;
-}
+.country:hover { background: #424b6d; }
+.all-countries .country--active { background: #1d3827; }
 
 .my-countries .country--global { background: #252a3d; }
 .my-countries .country--global:hover { background: #424b6d; }
@@ -85,7 +83,7 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: #494e5c;
+  background: rgba(255,255,255,0.2);
 }
 
 /* ------- */
