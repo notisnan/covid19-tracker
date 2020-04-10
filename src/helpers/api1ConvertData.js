@@ -18,6 +18,8 @@ function api1ConvertCountryData(data) {
       new_deaths: Number(item.new_deaths.split(',').join('')),
       title: item.country_name
     }
+
+    if (!item.country_name) { delete newCountryData['']; }
   });
 
   return newCountryData;
