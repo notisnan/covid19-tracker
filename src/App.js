@@ -178,7 +178,6 @@ class App extends React.Component {
           countries: getTopFourConfirmedCountries(this.state.countryData)
         };
         newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-        newUserStorage.countries.splice(newUserStorage.countries.indexOf('global'), 1);
 
         this.setState({userStorage: newUserStorage});
         chrome.storage.sync.set({ 'userStorage': newUserStorage });
