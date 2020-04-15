@@ -4,6 +4,8 @@
 
 export default function formatNumber(number) {
 
+  if (Number.isNaN(number)) return '';
+
   // ---------------
   // Up to a thousand
   // ---------------
