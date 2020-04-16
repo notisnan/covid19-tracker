@@ -39,9 +39,9 @@ Everytime you make code changes, you will need to rebuild the project and refres
 
 #### As a React web app
 
-1. Inside of `App.js` comment out all code that references `chrome.storage` as Chrome storage is not available outside of the extension ecosystem.
+1. Inside of `App.js` comment out all code that references `chrome.storage` as Chrome storage is not available outside of the extension ecosystem. (Located in 3 places, `initializeState`, `addCountry`, `removeCountry`)
 2. In `App.js` look for the comment starting with `// If running in react use the code...` and uncomment the 3 lines of code below.
-3. `npm run start` a server will spin up and server the app on `http://localhost:3000/` - Now when you make changes to the code, the server will auto refresh your browser with the changes, no need to build the project everytime.
+3. `npm run start` will spin up a server on `http://localhost:3000/` - Now when you make changes to the code, the server will auto refresh your browser with the changes, no need to build the project everytime.
 4. When ready to push your changes, make sure to revert the Chrome storage changes. (Be sure not to uncomment `chrome.storage.sync.remove('userStorage');` otherwise the users chrome storage will be cleared everytime the app is run, this is there only for testing)
 
 ----
