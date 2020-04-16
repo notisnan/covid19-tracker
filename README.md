@@ -26,7 +26,7 @@ API information is updated on 10 minute intervals and consumes the data from [Jo
 
 ## Running the app locally
 
-There are 2 ways to run the app locally, as a Chrome extension, and as a regular React web app. For development, the React web app way makes for a faster development process.
+There are 2 ways to run the app locally, as a Chrome extension, and as a React web app. For development, the React web app way makes for a faster development process.
 
 #### As a Chrome extension
 
@@ -42,7 +42,7 @@ Everytime you make code changes, you will need to rebuild the project and refres
 1. Inside of `App.js` comment out all code that references `chrome.storage` as Chrome storage is not available outside of the extension ecosystem.
 2. In `App.js` look for the comment starting with `// If running in react use the code...` and uncomment the 3 lines of code below.
 3. `npm run start` a server will spin up and server the app on `http://localhost:3000/` - Now when you make changes to the code, the server will auto refresh your browser with the changes, no need to build the project everytime.
-4. When ready to push your changes, make sure to revert the Chrome storage comments
+4. When ready to push your changes, make sure to revert the Chrome storage changes. (Be sure not to uncomment `chrome.storage.sync.remove('userStorage');` otherwise the users chrome storage will be cleared everytime the app is run, this is there only for testing)
 
 ----
 
