@@ -1,10 +1,12 @@
 // ----------------------------
-// HELPER: format number for UI 
+// HELPER: format number for UI
 // ----------------------------
 
 export default function formatNumber(number) {
-
-  if (Number.isNaN(number)) return '';
+  // ----------------------
+  // Handle invalid numbers
+  // ----------------------
+  if (Number.isNaN(number)) return 'N/A';
 
   // ---------------
   // Up to a thousand
@@ -23,14 +25,14 @@ export default function formatNumber(number) {
     const removedDigits = Number(preDigit.slice(-2).join(''));
 
     preDigit.splice(-2);
-    
+
     // If the removed digits are greater than 50, round last value up
     if (removedDigits >= 50) {
       const newValue = Number(preDigit.join('')) + 1;
       preDigit = String(newValue).split('');
     }
 
-    preDigit.splice(preDigit.length-1, 0, '.');
+    preDigit.splice(preDigit.length - 1, 0, '.');
     preDigit.push('<span>k</span>');
     return preDigit.join('');
   }
@@ -50,7 +52,7 @@ export default function formatNumber(number) {
     preDigit = String(newValue).split('');
   }
 
-  preDigit.splice(preDigit.length-1, 0, '.');
+  preDigit.splice(preDigit.length - 1, 0, '.');
   preDigit.push('<span>m</span>');
   return preDigit.join('');
 }
