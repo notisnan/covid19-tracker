@@ -30,14 +30,15 @@ API information is updated on 10 minute intervals and consumes the data from [Jo
 
 There are 2 ways to run the app locally, as a Chrome extension, and as a React web app. For development, the React web app way makes for a faster development process.
 
+<br>
 
 ### API
 
 Our project uses an API that's hosted on [Rapid API](https://rapidapi.com/), because of this, our API requires a key to access the API data. We do not include the key in the repo to prevent abuse of the API.
 
-If you would like to contribute to the project, create or respond to one of the issues letting us know, and we will share the API key with you.
+- If you would like to contribute to the project, create or respond to one of the issues letting us know, and we will share the API key with you.
 
-If you just want to play around with the project locally, you can setup your own API key by following the instructions [here](https://docs.rapidapi.com/docs/keys). We are currently using the [Corona Virus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
+- If you just want to play around with the project locally, you can setup your own API key by following the instructions [here](https://docs.rapidapi.com/docs/keys). We are currently using the [Corona Virus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
 
 Once you have your key, you need to create a `headers.js` file within the '/src' folder and add your credentials like this:
 
@@ -48,6 +49,8 @@ export default {
 };
 ```
 
+<br>
+
 ### Running as a Chrome extension locally
 
 1. Make the code changes you need
@@ -56,6 +59,8 @@ export default {
 4. Click load unpacked, and point to your `build` folder
 
 Everytime you make code changes, you will need to rebuild the project and refresh the chrome extension to view your changes.
+
+<br>
 
 ### Running as a React web app locally
 
