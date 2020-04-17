@@ -16,7 +16,8 @@ function api1ConvertCountryData(data) {
       total_recovered: Number(item.total_recovered.split(',').join('')),
       new_cases: Number(item.new_cases.split(',').join('')),
       new_deaths: Number(item.new_deaths.split(',').join('')),
-      title: item.country_name
+      title: item.country_name,
+      cases_per_million: Number(item.total_cases_per_1m_population.split(',').join(''))
     }
 
     if (!item.country_name) { delete newCountryData['']; }
@@ -36,7 +37,8 @@ function api1ConvertWorldData(data) {
     new_cases: Number(data.new_cases.split(',').join('')),
     new_deaths: Number(data.new_deaths.split(',').join('')),
     total_recovered: Number(data.total_recovered.split(',').join('')),
-    title: 'Global'
+    title: 'Global',
+    cases_per_million: Number(data.total_cases_per_1m_population.split(',').join(''))
   };
 
   return newWorldData;

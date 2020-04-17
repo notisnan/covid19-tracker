@@ -22,6 +22,78 @@
 .my-countries .country--global { background: #252a3d; }
 .my-countries .country--global:hover { background: #424b6d; }
 
+
+/* ------------- */
+/* Column styles */
+/* ------------- */
+
+.column {
+  border-right: 1px solid #000000;
+  text-align: right;
+  padding: 10px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.column:last-child {
+  border-right: 0;
+}
+
+.column__info-top {
+  color: #ffffff;
+  font-size: 17px;
+  letter-spacing: 0.025em;
+  position: relative;
+}
+
+.column__info-top span {
+  color: #b3c1ff;
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  margin-left: 2px;
+}
+
+.column__info-bottom {
+  color: #808aa2;
+  font-size: 11px;
+  letter-spacing: 0.025em;
+  min-height: 13px;
+}
+
+
+.column-recovered .column__info-top::after {
+  content: '';
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* -------------- */
+/* Country column */
+/* -------------- */
+
+.column-country {
+  flex-shrink: 1;
+  margin-right: auto;
+  border-right: 0;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.column-country .column__info-top {
+  color: #ffddb7;
+  font-size: 15px;
+  letter-spacing: 0.025em;
+  max-width: 180px;
+  padding: 0;
+}
+
 .country__name {
   color: #ffddb7;
   font-size: 15px;
@@ -37,53 +109,6 @@
 
 .country__name--small {
   font-size: 12px;
-}
-
-.statistic {
-  border-right: 1px solid #000000;
-  text-align: right;
-  padding: 10px 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.statistic:last-child {
-  border-right: 0;
-}
-
-.statistic__count {
-  color: #ffffff;
-  font-size: 17px;
-  letter-spacing: 0.025em;
-  position: relative;
-}
-
-.statistic__count span {
-  color: #b3c1ff;
-  font-size: 12px;
-  letter-spacing: 0.025em;
-  margin-left: 2px;
-}
-
-.statistic__change {
-  color: #808aa2;
-  font-size: 11px;
-  letter-spacing: 0.025em;
-  min-height: 13px;
-}
-
-
-.column-recovered .statistic__count::after {
-  content: '';
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(255,255,255,0.2);
 }
 
 /* ------- */

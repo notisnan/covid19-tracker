@@ -43,18 +43,39 @@ export default function formatNumber(number) {
   // Up to a billion
   // ---------------
 
+  if (number < 1000000000) {
+    let preDigit = String(number).split('');
+    const removedDigits = Number(preDigit.slice(-5).join(''));
+
+    preDigit.splice(-5);
+
+    // If the removed digits are greater than 50000, round last value up
+    if (removedDigits >= 50000) {
+      const newValue = Number(preDigit.join('')) + 1;
+      preDigit = String(newValue).split('');
+    }
+
+    preDigit.splice(preDigit.length - 1, 0, '.');
+    preDigit.push('<span>m</span>');
+    return preDigit.join('');
+  }
+
+  // ----------------
+  // Up to a trillion
+  // ----------------
+
   let preDigit = String(number).split('');
   const removedDigits = Number(preDigit.slice(-5).join(''));
 
-  preDigit.splice(-5);
+  preDigit.splice(-8);
 
   // If the removed digits are greater than 50000, round last value up
-  if (removedDigits >= 50000) {
+  if (removedDigits >= 50000000) {
     const newValue = Number(preDigit.join('')) + 1;
     preDigit = String(newValue).split('');
   }
 
   preDigit.splice(preDigit.length - 1, 0, '.');
-  preDigit.push('<span>m</span>');
+  preDigit.push('<span>b</span>');
   return preDigit.join('');
 }
