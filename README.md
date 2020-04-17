@@ -18,7 +18,7 @@ A Chrome extension to show important COVID-19 global and local information.
 ## Data
 We are consuming the data from the [Corona Virus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
 
-API information is updated on 10 minute intervals and consumes the data from [Johns Hopkins](https://coronavirus.jhu.edu/map.html) or [Worldometer](https://www.worldometers.info/coronavirus/) depending on which one has the most up to date information.
+API information is updated on 10 minute intervals and consumes the data from [Johns Hopkins](https://coronavirus.jhu.edu/map.html) or [Worldometer](https://www.worldometers.info/coronavirus/) depending on which one has the most up to date information at the time.
 
 <br>
 
