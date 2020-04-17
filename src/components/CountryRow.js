@@ -47,12 +47,12 @@ class CountryRow extends React.Component {
 
         <div className="statistic column-confirmed">
           <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
-      <div className="statistic__change">{`+${country.new_cases.toLocaleString()}`}</div>
+      <div className="statistic__change">{`+${country.new_cases.toLocaleString('en-US')}`}</div>
         </div>
 
         <div className="statistic column-deaths">
           <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
-          <div className="statistic__change">{ `+${country.new_deaths.toLocaleString()}` }</div>
+          <div className="statistic__change">{ `+${country.new_deaths.toLocaleString('en-US')}` }</div>
         </div>
 
         <div className="statistic column-recovered">
