@@ -47,7 +47,10 @@ class CountryRow extends React.Component {
         {/* <div className="country__name">{country.title}</div> */}
 
         <div className="column column-country">
-          <div className="column__info-top">{country.title}</div>
+          <div className={`
+            column__info-top
+            ${(country.title.length > 16) ? 'column__info-top--small' : ''}
+          `}>{country.title}</div>
           <div className="column__info-bottom" dangerouslySetInnerHTML={{__html: `pop. ${concatNumber(parseInt(country.cases/country.cases_per_million*1000000))}`}}></div>
         </div>
 

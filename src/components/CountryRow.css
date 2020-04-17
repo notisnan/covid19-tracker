@@ -49,6 +49,8 @@
   position: relative;
 }
 
+.column__info-top--small { font-size: 12px; }
+
 .column__info-top span {
   color: #b3c1ff;
   font-size: 12px;
@@ -84,31 +86,13 @@
   border-right: 0;
   text-align: left;
   align-items: flex-start;
+  padding-right: 0;
 }
 
 .column-country .column__info-top {
   color: #ffddb7;
-  font-size: 15px;
-  letter-spacing: 0.025em;
   max-width: 180px;
   padding: 0;
-}
-
-.country__name {
-  color: #ffddb7;
-  font-size: 15px;
-  letter-spacing: 0.025em;
-  padding: 10px 20px;
-  margin-top: 2px;
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  max-width: 180px;
-}
-
-.country__name--small {
-  font-size: 12px;
 }
 
 /* ------- */
