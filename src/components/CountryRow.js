@@ -1,7 +1,6 @@
 import React from 'react';
 import './CountryRow.css';
 import concatNumber from '../helpers/concatNumber.js';
-import calculatePercentage from '../helpers/calculatePercentage.js';
 
 // Transition group: https://reactcommunity.org/react-transition-group/
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -48,12 +47,12 @@ class CountryRow extends React.Component {
 
         <div className="statistic column-confirmed">
           <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
-          <div className="statistic__change" dangerouslySetInnerHTML={{__html: calculatePercentage(country.new_cases, country.cases)}}></div>
+      <div className="statistic__change">{`+${country.new_cases.toLocaleString()}`}</div>
         </div>
 
         <div className="statistic column-deaths">
           <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
-          <div className="statistic__change" dangerouslySetInnerHTML={{__html: calculatePercentage(country.new_deaths, country.deaths)}}></div>
+          <div className="statistic__change">{ `+${country.new_deaths.toLocaleString()}` }</div>
         </div>
 
         <div className="statistic column-recovered">
