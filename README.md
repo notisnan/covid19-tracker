@@ -20,17 +20,12 @@ We are consuming the data from the [Corona Virus Monitor](https://rapidapi.com/a
 
 API information is updated on 10 minute intervals and consumes the data from [Johns Hopkins](https://coronavirus.jhu.edu/map.html) or [Worldometer](https://www.worldometers.info/coronavirus/) depending on which one has the most up to date information at the time.
 
-<br>
-
-----
-
-<br>
 
 ## Running the app locally
 
 There are 2 ways to run the app locally, as a Chrome extension, and as a React web app. For development, the React web app way makes for a faster development process.
 
-<br>
+----
 
 ### API
 
@@ -49,7 +44,7 @@ export default {
 };
 ```
 
-<br>
+----
 
 ### Running as a Chrome extension locally
 
@@ -60,7 +55,7 @@ export default {
 
 Everytime you make code changes, you will need to rebuild the project and refresh the chrome extension to view your changes.
 
-<br>
+----
 
 ### Running as a React web app locally
 
@@ -68,11 +63,7 @@ Everytime you make code changes, you will need to rebuild the project and refres
 2. In `App.js` look for the comment starting with `// If running in react use the code...` and uncomment the 3 lines of code below.
 3. `npm run start` will spin up a server on `http://localhost:3000/` - Now when you make changes to the code, the server will auto refresh your browser with the changes, no need to build the project everytime.
 4. When ready to push your changes, make sure to revert the Chrome storage changes. (Be sure not to uncomment `chrome.storage.sync.remove('userStorage');` otherwise the users chrome storage will be cleared everytime the app is run, this is there only for testing)
-
-<br>
-
 ----
-
 <br>
 
 This was authored by [Mariusz Dabrowski](https://github.com/MariuszDabrowski) & [Dulio Denis](https://github.com/duliodenis) for a Hackathon presented on March 28th, 2020.
