@@ -22,24 +22,12 @@
 .my-countries .country--global { background: #252a3d; }
 .my-countries .country--global:hover { background: #424b6d; }
 
-.country__name {
-  color: #ffddb7;
-  font-size: 15px;
-  letter-spacing: 0.025em;
-  padding: 10px 20px;
-  margin-top: 2px;
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  max-width: 180px;
-}
 
-.country__name--small {
-  font-size: 12px;
-}
+/* ------------- */
+/* Column styles */
+/* ------------- */
 
-.statistic {
+.column {
   border-right: 1px solid #000000;
   text-align: right;
   padding: 10px 25px;
@@ -50,25 +38,27 @@
   flex-shrink: 0;
 }
 
-.statistic:last-child {
+.column:last-child {
   border-right: 0;
 }
 
-.statistic__count {
+.column__info-top {
   color: #ffffff;
   font-size: 17px;
   letter-spacing: 0.025em;
   position: relative;
 }
 
-.statistic__count span {
+.column__info-top--small { font-size: 12px; }
+
+.column__info-top span {
   color: #b3c1ff;
   font-size: 12px;
   letter-spacing: 0.025em;
   margin-left: 2px;
 }
 
-.statistic__change {
+.column__info-bottom {
   color: #808aa2;
   font-size: 11px;
   letter-spacing: 0.025em;
@@ -76,7 +66,7 @@
 }
 
 
-.column-recovered .statistic__count::after {
+.column-recovered .column__info-top::after {
   content: '';
   position: absolute;
   top: calc(100% + 6px);
@@ -84,6 +74,26 @@
   width: 100%;
   height: 1px;
   background: rgba(255,255,255,0.2);
+}
+
+/* -------------- */
+/* Country column */
+/* -------------- */
+
+.column-country {
+  flex-shrink: 1;
+  margin-right: auto;
+  border-right: 0;
+  text-align: left;
+  align-items: flex-start;
+  padding-right: 0;
+}
+
+.column-country .column__info-top {
+  color: #ffddb7;
+  max-width: 180px;
+  padding: 0;
+  font-size: 15px;
 }
 
 /* ------- */
