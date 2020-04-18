@@ -44,8 +44,6 @@ class CountryRow extends React.Component {
         }
         </TransitionGroup>
 
-        {/* <div className="country__name">{country.title}</div> */}
-
         <div className="column column-country">
           <div className={`
             column__info-top
