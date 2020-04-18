@@ -43,21 +43,27 @@ class CountryRow extends React.Component {
         }
         </TransitionGroup>
 
-        <div className="country__name">{country.title}</div>
-
-        <div className="statistic column-confirmed">
-          <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
-      <div className="statistic__change">{`+${country.new_cases.toLocaleString('en-US')}`}</div>
+        <div className="column column-country">
+          <div className={`
+            column__info-top
+            ${(country.title.length > 16) ? 'column__info-top--small' : ''}
+          `}>{country.title}</div>
+          <div className="column__info-bottom" dangerouslySetInnerHTML={{__html: `pop ${concatNumber(parseInt(country.cases/country.cases_per_million*1000000))}`}}></div>
         </div>
 
-        <div className="statistic column-deaths">
-          <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
-          <div className="statistic__change">{ `+${country.new_deaths.toLocaleString('en-US')}` }</div>
+        <div className="column column-confirmed">
+          <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.cases)}}></div>
+          <div className="column__info-bottom">{`+${country.new_cases.toLocaleString('en-US')}`}</div>
         </div>
 
-        <div className="statistic column-recovered">
-          <div className="statistic__count" dangerouslySetInnerHTML={{__html: concatNumber(country.total_recovered)}}></div>
-          <div className="statistic__change"></div>
+        <div className="column column-deaths">
+          <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
+          <div className="column__info-bottom"{ `+${country.new_deaths.toLocaleString('en-US')}` }></div>
+        </div>
+
+        <div className="column column-recovered">
+          <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.total_recovered)}}></div>
+          <div className="column__info-bottom"></div>
         </div>
       </div>
     );
