@@ -58,7 +58,7 @@ class CountryRow extends React.Component {
 
         <div className="column column-deaths">
           <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.deaths)}}></div>
-          <div className="column__info-bottom"{ `+${country.new_deaths.toLocaleString('en-US')}` }></div>
+          <div className="column__info-bottom">{ `+${country.new_deaths.toLocaleString('en-US')}` }</div>
         </div>
 
         <div className="column column-recovered">
