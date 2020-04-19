@@ -9,6 +9,7 @@ import './css/os-theme-thick-light.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 // Components
+import CountToggle from './components/CountToggle';
 import CountryToggle from './components/CountryToggle';
 import CountriesHeadings from './components/CountriesHeadings';
 import CountryForm from './components/CountryForm';
@@ -47,7 +48,8 @@ class App extends React.Component {
       sort: {
         column: '',
         highLow: true
-      }
+      },
+      countType: 'total'
     };
   }
 
@@ -71,20 +73,39 @@ class App extends React.Component {
     }
     
     if (highLow) {
+    // High to low
       
-      // High to low
-      if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases - countries[a].cases );
-      } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths - countries[a].deaths );
-      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[b].tested - countries[a].tested );
-      } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].total_recovered - countries[a].total_recovered );}
+      if (this.state.countType === 'total') {
+      // Sorting total count
+        if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases - countries[a].cases );
+        } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths - countries[a].deaths );
+        } else if (column === 'tested') { sortedArray.sort((a, b) => countries[b].tested - countries[a].tested );
+        } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].total_recovered - countries[a].total_recovered );}
+      } else {
+      // Sorting per 1 million
+        if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases_per_million - countries[a].cases_per_million );
+        } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths_per_million - countries[a].deaths_per_million );
+        } else if (column === 'tested') { sortedArray.sort((a, b) => countries[b].tests_per_million - countries[a].tests_per_million );
+        } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].recovered_per_million - countries[a].recovered_per_million );}
+      }
+      
 
     } else {
-
-      // Low to high
-      if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases - countries[b].cases );
-      } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths - countries[b].deaths );
-      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[a].tested - countries[b].tested );
-      } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].total_recovered - countries[b].total_recovered ); }
+    // Low to high
+      
+      if (this.state.countType === 'total') {
+      // Sorting total count
+        if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases - countries[b].cases );
+        } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths - countries[b].deaths );
+        } else if (column === 'tested') { sortedArray.sort((a, b) => countries[a].tested - countries[b].tested );
+        } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].total_recovered - countries[b].total_recovered ); }
+      } else {
+      // Sorting per 1 million
+        if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases_per_million - countries[b].cases_per_million );
+        } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths_per_million - countries[b].deaths_per_million );
+        } else if (column === 'tested') { sortedArray.sort((a, b) => countries[a].tests_per_million - countries[b].tests_per_million );
+        } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].recovered_per_million - countries[b].recovered_per_million ); }
+      }
 
     }
 
@@ -168,7 +189,7 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    let myTempCountries = ['canada', 'usa', 'global'];
+    let myTempCountries = ['canada', 'usa', 'global', 'faeroe islands', 'south sudan'];
     myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
     this.setState({userStorage: {countries: myTempCountries}});
 
@@ -289,10 +310,29 @@ class App extends React.Component {
     }
   }
 
+  // ------------------------------------------
+  // Toggle total cases and cases per 1 million
+  // ------------------------------------------
+
+  toggleCount = () => {
+    this.setState({ countType: (this.state.countType === 'total') ? 'million' : 'total' }, () => {
+      const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
+      newUserStorage.countries = this.sortData(this.state.userStorage.countries, this.state.countryData, this.state.sort.column, true);
+
+      this.setState({ userStorage: newUserStorage });
+    });
+  }
+
   render() {
     return (
       <div className={`app ${this.state.refreshing ? 'app--refreshing' : ''}`} ref={this.appElement}>
         <div className="app__header">
+          <div className="logo">
+            <svg className="logo__svg" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 572.9 599.9" style={{ enableBackground: 'new 0 0 572.9 599.9' }} xmlSpace="preserve">
+              <path d="M523.3,349.6c-11.8,0-22.7,4.1-31.2,11l-25.7-9.9c2.8-10.5,4.7-21.3,5.7-32.4c15.2-8.5,25.5-24.7,25.5-43.4 c0-23.6-16.5-43.4-38.6-48.4c-4.7-11.9-10.5-23.2-17.3-33.8l19.2-19.2c4.1,1.1,8.4,1.7,12.9,1.7c27.4,0,49.6-22.2,49.6-49.6 S501,76,473.6,76S424,98.2,424,125.7c0,4.5,0.6,8.8,1.7,12.9l-16,16c-30-28.1-68.6-47-111.4-52.3v-9.5c14.9-8.6,24.9-24.6,24.9-43 C323.2,22.2,301,0,273.6,0s-49.6,22.2-49.6,49.6c0,18.4,10,34.4,24.8,43v9.6c-45,5.6-85.4,26.3-115.9,56.8l-34.2-25.4 c0.4-2.6,0.6-5.2,0.6-7.9C99.3,98.2,77.1,76,49.6,76S0,98.2,0,125.7s22.2,49.6,49.6,49.6c6.2,0,12.2-1.2,17.7-3.2l35,26.1 C84.5,227.9,74.3,262.8,74.3,300c0,2.2,0,4.4,0.1,6.6c-7.3-4.2-15.7-6.6-24.8-6.6C22.2,299.9,0,322.2,0,349.6s22.2,49.6,49.6,49.6 c16.8,0,31.6-8.3,40.6-21.1c6.9,16.1,15.8,31.1,26.5,44.7l-29.9,29.9c-4.1-1.1-8.4-1.7-12.9-1.7c-27.4,0-49.6,22.2-49.6,49.6 s22.2,49.6,49.6,49.6s49.6-22.2,49.6-49.6c0-4.5-0.6-8.8-1.7-12.9l30-30c18.3,14.1,39,25.1,61.5,32.3c-8.9,9-14.4,21.3-14.4,34.9 c0,27.4,22.2,49.6,49.6,49.6s49.6-22.2,49.6-49.6c0-9.7-2.8-18.7-7.6-26.4c20.8-1.8,40.6-6.8,59.1-14.4l29.5,44.5 c-3.2,6.6-5,13.9-5,21.7c0,27.4,22.2,49.6,49.6,49.6s49.6-22.2,49.6-49.6s-22.2-49.6-49.6-49.6c-1.2,0-2.4,0.1-3.6,0.1L393,459.5 c22.4-16.8,41.1-38.2,54.8-62.8l26.4,10.2c3.7,23.8,24.2,42,49,42c27.4,0,49.6-22.2,49.6-49.6C572.9,371.8,550.7,349.6,523.3,349.6z M273.6,449.3c-82.3,0-149.3-67-149.3-149.3s67-149.3,149.3-149.3s149.3,67,149.3,149.3S355.9,449.3,273.6,449.3z"/>
+            </svg>
+          </div>
+          <CountToggle countType={this.countType} toggleCount={this.toggleCount} state={this.state} />
           <CountryToggle app={this} toggleList={this.toggleList} state={this.state} />
         </div>
   

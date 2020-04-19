@@ -12,10 +12,11 @@
 
 .app__header {
   background: #1a4ed0;
+  background: linear-gradient(#1a4ed0, #0c3aae);
   margin-bottom: 18px;
-  padding: 18px 20px;
   display: flex;
   justify-content: flex-end;
+  border-bottom: 5px solid #131f62;
 }
 
 .app__body {
@@ -31,6 +32,23 @@
   min-height: 48px;
   position: relative;
   z-index: 100;
+}
+
+/* ---- */
+/* Logo */
+/* ---- */
+
+.logo {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  margin-right: auto;
+  padding: 18px 20px;
+}
+
+.logo__svg {
+  height: 35px;
+  fill: #092f88;
 }
 
 /* ------------ */

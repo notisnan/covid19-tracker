@@ -1,9 +1,14 @@
+.country-toggle-wrapper {
+  padding: 18px 20px;
+}
+
 .country-toggle {
   background: #0b2f88;
   display: flex;
   border-radius: 17px;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 1px 1px rgba(0,0,0, 0.3);
 }
 
 .country-toggle::after {
@@ -14,9 +19,11 @@
   width: 110px;
   height: 100%;
   background: #5679d0;
+  background: linear-gradient(#5679d0, #406cda);
   border-radius: 17px;
   z-index: 10;
   transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  box-shadow: inset 1px 1px rgba(255,255,255, 0.08);
 }
 
 .country-toggle--all::after {
@@ -32,6 +39,7 @@
   font-size: 12px;
   font-weight: 500;
   color: #808aa2;
+  text-shadow: 0 -1px rgba(0,0,0, 0.2);
   letter-spacing: 0.025em;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -41,8 +49,14 @@
   transition: color 0.4s 0.1s;
 }
 
-.country-toggle__item:first-child { color: #fff; }
-.country-toggle--all .country-toggle__item:first-child { color: #808aa2; }
-.country-toggle--all .country-toggle__item:last-child { color: #fff; }
+.country-toggle__item:first-child,
+.country-toggle--all .country-toggle__item:last-child {
+  color: #f6f8fc;
+}
+
+.country-toggle--all .country-toggle__item:first-child {
+  color: #808aa2;
+  text-shadow: 0 -1px rgba(0,0,0, 0.2);
+}
 
 .country-toggle__item:first-child { margin-right: -10px; }
