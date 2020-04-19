@@ -3,7 +3,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 480px;
+  width: 580px;
 }
 
 .app--disabled {
@@ -58,6 +58,7 @@
 
 .column-confirmed { width: 104px; }
 .column-deaths { width: 100px; }
+.column-tested { width: 100px; }
 .column-recovered { width: 104px; }
 
 /* ------------ */

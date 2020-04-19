@@ -75,6 +75,7 @@ class App extends React.Component {
       // High to low
       if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases - countries[a].cases );
       } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths - countries[a].deaths );
+      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[b].tested - countries[a].tested );
       } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].total_recovered - countries[a].total_recovered );}
 
     } else {
@@ -82,6 +83,7 @@ class App extends React.Component {
       // Low to high
       if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases - countries[b].cases );
       } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths - countries[b].deaths );
+      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[a].tested - countries[b].tested );
       } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].total_recovered - countries[b].total_recovered ); }
 
     }
@@ -166,33 +168,33 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    // let myTempCountries = ['canada', 'usa', 'global'];
-    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
-    // this.setState({userStorage: {countries: myTempCountries}});
+    let myTempCountries = ['canada', 'usa', 'global'];
+    myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    chrome.storage.sync.get('userStorage', (result) => {
-      if (!result.userStorage) {
-        const newUserStorage = {
-          countries: getTopFourConfirmedCountries(this.state.countryData)
-        };
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    // chrome.storage.sync.get('userStorage', (result) => {
+    //   if (!result.userStorage) {
+    //     const newUserStorage = {
+    //       countries: getTopFourConfirmedCountries(this.state.countryData)
+    //     };
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
-        this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
-      }
-      else {
-        const newUserStorage = result.userStorage;
+    //     this.setState({userStorage: newUserStorage});
+    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
+    //   }
+    //   else {
+    //     const newUserStorage = result.userStorage;
 
-        // For V1 users that didn't have global in their country list
-        // We manually patch global in for them
-        if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
+    //     // For V1 users that didn't have global in their country list
+    //     // We manually patch global in for them
+    //     if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
 
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-        this.setState({userStorage: newUserStorage});
-      }
-    });
+    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    //     this.setState({userStorage: newUserStorage});
+    //   }
+    // });
   }
 
   // -----------------------
@@ -246,7 +248,7 @@ class App extends React.Component {
       newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
       this.setState({userStorage: newUserStorage});
-      chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
       if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -270,7 +272,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
