@@ -36,11 +36,20 @@ class CountriesHeadings extends React.Component {
 
         <div
         className={`
+          ${this.props.state.sort.column === 'tested' ? 'header__item--active' : ''}
+          ${this.props.state.sort.highLow ? 'header__item--high-low' : 'header__item--low-high'}
+          header__item header__item--tested column-tested`}
+        onClick={() => this.sortColumn('tested')}
+        ><span>Tested</span></div>
+
+        <div
+        className={`
           ${this.props.state.sort.column === 'recovered' ? 'header__item--active' : ''}
           ${this.props.state.sort.highLow ? 'header__item--high-low' : 'header__item--low-high'}
           header__item header__item--recovered column-recovered`}
         onClick={() => this.sortColumn('recovered')}
         ><span>Recovered</span></div>
+
       </div>
     );
   }

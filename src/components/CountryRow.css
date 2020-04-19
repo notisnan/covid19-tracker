@@ -66,6 +66,7 @@
 }
 
 
+.column-tested .column__info-top::after,
 .column-recovered .column__info-top::after {
   content: '';
   position: absolute;

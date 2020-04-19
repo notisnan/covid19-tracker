@@ -75,6 +75,7 @@ class App extends React.Component {
       // High to low
       if (column === 'confirmed') { sortedArray.sort((a, b) => countries[b].cases - countries[a].cases );
       } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[b].deaths - countries[a].deaths );
+      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[b].tested - countries[a].tested );
       } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[b].total_recovered - countries[a].total_recovered );}
 
     } else {
@@ -82,6 +83,7 @@ class App extends React.Component {
       // Low to high
       if (column === 'confirmed') { sortedArray.sort((a, b) => countries[a].cases - countries[b].cases );
       } else if (column === 'deaths') { sortedArray.sort((a, b) => countries[a].deaths - countries[b].deaths );
+      } else if (column === 'tested') { sortedArray.sort((a, b) => countries[a].tested - countries[b].tested );
       } else if (column === 'recovered') { sortedArray.sort((a, b) => countries[a].total_recovered - countries[b].total_recovered ); }
 
     }

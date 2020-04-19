@@ -48,7 +48,7 @@ class CountryRow extends React.Component {
             column__info-top
             ${(country.title.length > 16) ? 'column__info-top--small' : ''}
           `}>{country.title}</div>
-          <div className="column__info-bottom" dangerouslySetInnerHTML={{__html: `pop ${concatNumber(parseInt(country.cases/country.cases_per_million*1000000))}`}}></div>
+          <div className="column__info-bottom" dangerouslySetInnerHTML={{__html: `pop ${concatNumber(country.population)}`}}></div>
         </div>
 
         <div className="column column-confirmed">
@@ -61,10 +61,16 @@ class CountryRow extends React.Component {
           <div className="column__info-bottom">{ `+${country.new_deaths.toLocaleString('en-US')}` }</div>
         </div>
 
+        <div className="column column-tested">
+          <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.tested || NaN)}}></div>
+          <div className="column__info-bottom"></div>
+        </div>
+
         <div className="column column-recovered">
           <div className="column__info-top" dangerouslySetInnerHTML={{__html: concatNumber(country.total_recovered)}}></div>
           <div className="column__info-bottom"></div>
         </div>
+
       </div>
     );
   }
