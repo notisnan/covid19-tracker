@@ -37,7 +37,7 @@ function api1ConvertCountryData(data) {
     } else {
       // If the country population is less than a million we need a different formula
       const multiple = 1000000/population;
-      tested = testedPerMillion * multiple;
+      tested = testedPerMillion / multiple;
     }
 
     return parseInt(tested);

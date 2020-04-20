@@ -66,6 +66,8 @@ class CountryRow extends React.Component {
   render() {
     const country = this.props.placeData;
 
+    console.log(country);
+
     // ------
     // Return
     // ------
