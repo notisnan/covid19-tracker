@@ -1,0 +1,60 @@
+.count-toggle-wrapper {
+  display: flex;
+  cursor: pointer;
+  padding: 18px 20px;
+  border-right: 1px dotted rgba(0,0,0, 0.3);
+  border-left: 1px dotted rgba(0,0,0, 0.3);
+}
+
+/* ------------ */
+/* Count Toggle */
+/* ------------ */
+
+.count-toggle {
+  background: #0a2988;
+  width: 19px;
+  height: 100%;
+  border-radius: 10px;
+  margin-right: 6px;
+  position: relative;
+  box-shadow: inset 1px 1px rgba(0,0,0, 0.1);
+}
+
+.count-toggle__indicator {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  background: #b4c6fe;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: inset 3px 3px rgba(255,255,255, 0.2), inset -3px -3px rgba(0,0,0, 0.2);
+}
+
+.count-toggle-wrapper--million .count-toggle__indicator {
+  transform: translateY(16px);
+}
+
+/* ------------ */
+/* Count Labels */
+/* ------------ */
+
+.count-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.count-labels__item {
+  font-size: 12px;
+  letter-spacing: 0.025em;
+  color: #8799d0;
+  transition: color 0.2s;
+  text-shadow: 0 -1px rgba(0,0,0, 0.2);
+}
+
+.count-labels__item--active {
+  color: #f6f8fc;
+}

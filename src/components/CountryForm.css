@@ -6,7 +6,7 @@
 .country-form--diabled { pointer-events: none; }
 
 .country-form__input {
-  background: #252a3d;
+  background: linear-gradient(#252a3d, #1d2131);
   border: 1px solid #535969;
   border-radius: 5px;
   color: #fff;
@@ -19,7 +19,6 @@
 }
 
 .country-form__button {
-  background: #47c293;
   border-radius: 5px;
   font-size: 12px;
   font-weight: 500;
@@ -29,9 +28,33 @@
   margin-left: 4px;
   cursor: pointer;
   transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
 }
 
-.country-form__button:hover { background: #53ffc7; }
+.country-form__button::before,
+.country-form__button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.country-form__button::before {
+  background: linear-gradient(#20d38f, #14aa71);
+}
+
+.country-form__button::after {
+  background: linear-gradient(#25f5a6, #17ae75);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.country-form__button:hover:after { opacity: 1; }
 
 /* ------------------- */
 /* Country form errors */
