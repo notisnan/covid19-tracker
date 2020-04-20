@@ -190,33 +190,33 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    let myTempCountries = ['canada', 'usa', 'global', 'falkland islands', 'south sudan'];
-    myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
-    this.setState({userStorage: {countries: myTempCountries}});
+    // let myTempCountries = ['usa', 'global'];
+    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    // this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    // chrome.storage.sync.get('userStorage', (result) => {
-    //   if (!result.userStorage) {
-    //     const newUserStorage = {
-    //       countries: getTopFourConfirmedCountries(this.state.countryData)
-    //     };
-    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    chrome.storage.sync.get('userStorage', (result) => {
+      if (!result.userStorage) {
+        const newUserStorage = {
+          countries: getTopFourConfirmedCountries(this.state.countryData)
+        };
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
-    //     this.setState({userStorage: newUserStorage});
-    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
-    //   }
-    //   else {
-    //     const newUserStorage = result.userStorage;
+        this.setState({userStorage: newUserStorage});
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      }
+      else {
+        const newUserStorage = result.userStorage;
 
-    //     // For V1 users that didn't have global in their country list
-    //     // We manually patch global in for them
-    //     if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
+        // For V1 users that didn't have global in their country list
+        // We manually patch global in for them
+        if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
 
-    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-    //     this.setState({userStorage: newUserStorage});
-    //   }
-    // });
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+        this.setState({userStorage: newUserStorage});
+      }
+    });
   }
 
   // -----------------------
@@ -270,7 +270,7 @@ class App extends React.Component {
       newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
       this.setState({userStorage: newUserStorage});
-      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      chrome.storage.sync.set({ 'userStorage': newUserStorage });
       if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -294,7 +294,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }

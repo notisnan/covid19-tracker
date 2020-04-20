@@ -22,7 +22,7 @@ function api1ConvertCountryData(data) {
       recoveredPerMillion = totalRecovered * multiple;
     }
 
-    return parseInt(recoveredPerMillion);
+    return parseInt(recoveredPerMillion) || 0;
   }
 
   // Calculate the tested numbers
@@ -44,7 +44,7 @@ function api1ConvertCountryData(data) {
   }
 
   data.forEach(item => {
-    const population = parseInt(item.cases.split(',').join('')/item.total_cases_per_1m_population.split(',').join('')*1000000);
+    const population = parseInt(item.cases.split(',').join('')/item.total_cases_per_1m_population.split(',').join('')*1000000) || 0;
 
     newCountryData[item.country_name.toLowerCase()] = {
       cases: Number(item.cases.split(',').join('')),
@@ -54,7 +54,7 @@ function api1ConvertCountryData(data) {
       new_deaths: Number(item.new_deaths.split(',').join('')),
       title: item.country_name,
       cases_per_million: Number(item.total_cases_per_1m_population.split(',').join('')),
-      tests_per_million: Number(item.tests_per_1m_population.split(',').join('')),
+      tests_per_million: Number(item.tests_per_1m_population.split(',').join('')) || 0,
       deaths_per_million: Number(item.deaths_per_1m_population.split(',').join('')),
       recovered_per_million: getRecoveredPerMillion(
         population,
