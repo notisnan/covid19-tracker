@@ -125,6 +125,18 @@ class App extends React.Component {
   // -------------------------
 
   updateData = (cb) => {
+
+    // Start a timer before we get the data, if data is not returned throw an error
+    // We have to do this becuase the API provider is not returning us errors when the API fails    
+    const timeout = setTimeout(() => {
+      this.setState({
+        loading: false,
+        error: true,
+        refreshing: false
+      });
+      
+    }, 7000);
+
     const fetchGlobalData = fetch('https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php', {
       headers: headers
     }).then(response => response.json());
@@ -138,6 +150,8 @@ class App extends React.Component {
       newCountryData['global'] = api1ConvertWorldData(data[0]);
       const newCountryList = this.sortData(Object.keys(newCountryData), newCountryData, this.state.sort.column || 'confirmed', true);      
       
+      clearTimeout(timeout);
+
       const newAlternateSpellings = {
         'us': newCountryData['usa'],
         'united states': newCountryData['usa'],
@@ -153,7 +167,7 @@ class App extends React.Component {
       }, () => {        
         
         // Enable UI when fetching data complete
-        if (this.state.loading) {
+        if (this.state.loading || this.state.error) {
           this.setState({
             loading: false,
             error: false,
@@ -217,18 +231,6 @@ class App extends React.Component {
         this.setState({userStorage: newUserStorage});
       }
     });
-  }
-
-  // -----------------------
-  // Should component update
-  // -----------------------
-
-  shouldComponentUpdate = (nextProps, nextState) => {
-    if (!nextState.userStorage.countries.length) {
-      return false;
-    }
-
-    return true;
   }
 
   // ------------
