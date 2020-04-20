@@ -49,7 +49,8 @@ class App extends React.Component {
         column: '',
         highLow: true
       },
-      countType: 'million'
+      countType: 'total', // total, million
+      info: false
     };
   }
 
@@ -189,33 +190,33 @@ class App extends React.Component {
 
     // REACT
     // If running in react use the code below and comment out all instances of chrome storage
-    let myTempCountries = ['canada', 'usa', 'global', 'faeroe islands', 'south sudan'];
-    myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
-    this.setState({userStorage: {countries: myTempCountries}});
+    // let myTempCountries = ['canada', 'usa', 'global', 'faeroe islands', 'south sudan'];
+    // myTempCountries = this.sortData(myTempCountries, this.state.countryData, 'confirmed', true, true);
+    // this.setState({userStorage: {countries: myTempCountries}});
 
     // CHROME EXTENSION
     // If running as Chrome extension, use the code below
-    // chrome.storage.sync.get('userStorage', (result) => {
-    //   if (!result.userStorage) {
-    //     const newUserStorage = {
-    //       countries: getTopFourConfirmedCountries(this.state.countryData)
-    //     };
-    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+    chrome.storage.sync.get('userStorage', (result) => {
+      if (!result.userStorage) {
+        const newUserStorage = {
+          countries: getTopFourConfirmedCountries(this.state.countryData)
+        };
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
-    //     this.setState({userStorage: newUserStorage});
-    //     chrome.storage.sync.set({ 'userStorage': newUserStorage });
-    //   }
-    //   else {
-    //     const newUserStorage = result.userStorage;
+        this.setState({userStorage: newUserStorage});
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      }
+      else {
+        const newUserStorage = result.userStorage;
 
-    //     // For V1 users that didn't have global in their country list
-    //     // We manually patch global in for them
-    //     if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
+        // For V1 users that didn't have global in their country list
+        // We manually patch global in for them
+        if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
 
-    //     newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
-    //     this.setState({userStorage: newUserStorage});
-    //   }
-    // });
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
+        this.setState({userStorage: newUserStorage});
+      }
+    });
   }
 
   // -----------------------
@@ -269,7 +270,7 @@ class App extends React.Component {
       newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, true);
 
       this.setState({userStorage: newUserStorage});
-      // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+      chrome.storage.sync.set({ 'userStorage': newUserStorage });
       if (countryElement) countryElement.value = "";
     } else {
       // Country doesn't exist in our global countries list
@@ -293,7 +294,7 @@ class App extends React.Component {
         const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
         newUserStorage.countries.splice(i, 1);
         this.setState({userStorage: newUserStorage});
-        // chrome.storage.sync.set({ 'userStorage': newUserStorage });
+        chrome.storage.sync.set({ 'userStorage': newUserStorage });
       }
     }
   }
@@ -315,13 +316,22 @@ class App extends React.Component {
   // ------------------------------------------
 
   toggleCount = () => {
-    this.setState({ countType: (this.state.countType === 'total') ? 'million' : 'total' }, () => {
-      const newUserStorage = JSON.parse(JSON.stringify(this.state.userStorage));
-      newUserStorage.countries = this.sortData(this.state.userStorage.countries, this.state.countryData, this.state.sort.column, true);
-
-      this.setState({ userStorage: newUserStorage });
-    });
+    const header = document.querySelector('.header');
+    header.classList.add('header--unsorted');
+    this.setState({ countType: (this.state.countType === 'total') ? 'million' : 'total' });
   }
+  
+  // -----------
+  // Toggle info 
+  // -----------
+
+  toggleInfo = () => {
+    this.setState({ info: (this.state.info) ? false : true });
+  }
+
+  // ------
+  // Render
+  // ------
 
   render() {
     return (
@@ -341,7 +351,7 @@ class App extends React.Component {
         <OverlayScrollbarsComponent options={{ sizeAutoCapable: true }} className="os-theme-thick-light app__body">
           {this.state.loading &&
             <div className="app-message">
-              <img src={loader} alt=""/>
+              <img className="app-message__loader" src={loader} alt=""/>
             </div>
           }
           
@@ -390,10 +400,35 @@ class App extends React.Component {
           !this.state.error &&
             <CountryForm state={this.state} addCountry={this.addCountry}/>
           }
+
           {!this.state.loading &&
-            <RefreshButton refreshData={this.refreshData} state={this.state} />
+            <>
+              <RefreshButton refreshData={this.refreshData} state={this.state} />
+
+              <div className={`info-button ${this.state.loading ? 'info-button--loading' : ''}`} onClick={this.toggleInfo}>
+                <svg className="info-button__open" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" style={{ enableBackground: 'new 0 0 20 20' }} xmlSpace="preserve">
+                  <path d="M9,5h2v2H9V5z M9,9h2v6H9V9z M10,0C4.5,0,0,4.5,0,10s4.5,10,10,10s10-4.5,10-10S15.5,0,10,0z M10,18c-4.4,0-8-3.6-8-8 s3.6-8,8-8s8,3.6,8,8S14.4,18,10,18z"/>
+                </svg>
+              </div>
+            </>
           }
+
         </div>
+
+        {this.state.info &&
+          <div className="info">
+            <div className="info__reset">
+              <svg className="info__reset__icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 91 100" style={{ enableBackground: 'new 0 0 91 100' }} xmlSpace="preserve">
+                <path d="M61.1,66.4l-3.8,3.8c-0.5,0.5-1.2,0.8-1.9,0.8c-0.7,0-1.4-0.3-1.9-0.8l-8-8.2l-8.1,8.1c-0.5,0.5-1.2,0.8-1.9,0.8 s-1.4-0.3-1.9-0.8l-3.8-3.8c-0.5-0.5-0.8-1.2-0.8-1.9s0.3-1.4,0.8-1.9l8.1-8.1l-8.1-8.1c-0.5-0.5-0.8-1.2-0.8-1.9s0.3-1.4,0.8-1.9 l3.8-3.8c0.5-0.5,1.2-0.8,1.9-0.8s1.4,0.3,1.9,0.8l8.1,8.3l8.1-8.1c0.5-0.5,1.2-0.8,1.9-0.8c0.7,0,1.4,0.3,1.9,0.8l3.8,3.8 c0.5,0.5,0.8,1.2,0.8,1.9s-0.3,1.4-0.8,1.9l-8.1,8.1l8.1,8.1c0.5,0.5,0.8,1.2,0.8,1.9S61.6,65.9,61.1,66.4z"/>
+                <path d="M45.5,9.1h-27l5.4-5.4C25.3,2.3,24.3,0,22.4,0h-4.8c-0.6,0-1.1,0.2-1.5,0.6L5.4,11.3c-0.8,0.9-0.8,2.3,0,3.1l10.7,10.7 c0.4,0.4,0.9,0.6,1.5,0.6h4.8c1.9,0,2.9-2.3,1.5-3.7l-5.3-5.3h26.9c20.9,0,37.9,16.9,37.9,37.8s-17,37.9-37.9,37.9 S7.6,75.4,7.6,54.5c0-2.1-1.7-3.8-3.8-3.8c-2.1,0-3.8,1.7-3.8,3.8C0,79.6,20.4,100,45.5,100S91,79.6,91,54.6 C91,29.5,70.6,9.1,45.5,9.1z"/>
+                <path d="M45.5,50"/>
+              </svg>
+              Daily stats reset at GMT+0
+            </div>
+            <a href="https://github.com/notisnan/covid19-tracker#where-do-we-get-our-data" target="_blank" className="info__button">Data Source</a>
+            <a href="https://github.com/notisnan/covid19-tracker" target="_blank" className="info__button">Github</a>
+          </div>
+        }
 
       </div>
     );

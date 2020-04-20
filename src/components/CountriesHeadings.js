@@ -3,6 +3,9 @@ import './CountriesHeadings.css';
 
 class CountriesHeadings extends React.Component {
   sortColumn = (column) => {
+    const header = document.querySelector('.header');
+    header.classList.remove('header--unsorted');
+
     const newUserStorage = JSON.parse(JSON.stringify(this.props.state.userStorage));
     newUserStorage.countries = this.props.sortData(this.props.state.userStorage.countries, this.props.state.countryData, column);
 

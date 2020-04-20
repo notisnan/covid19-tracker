@@ -41,7 +41,8 @@
 .country:hover:after,
 .my-countries .country--global:hover:after { opacity: 1; }
 
-.all-countries .country--active { background: linear-gradient(#1d3827, #193122); }
+.all-countries .country--active::before { background: linear-gradient(#1d3827, #193122); }
+.all-countries .country--active::after { opacity: 0; transition: opacity 0.5s; }
 
 
 /* ------------- */
@@ -118,15 +119,33 @@
   font-size: 15px;
 }
 
+/* --------------------- */
+/* Country row animation */
+/* --------------------- */
+
+.country--enter,
+.country--appear {
+  opacity: 0;
+  transition: opacity 0.5s, background 1s;
+  background: #717b91;
+}
+
+.country--enter-active,
+.country--appear-active {
+  opacity: 1;
+  background: #252a3d;
+}
+
+.country--enter-done {
+  opacity: 1;
+}
+
 /* ------- */
 /* Buttons */
 /* ------- */
 
 .remove-country,
 .add-country {
-  position: absolute;
-  top: calc(50% - 12px);
-  left: -12px;
   width: 24px;
   height: 24px;
   border: 0;
@@ -136,6 +155,13 @@
   justify-content: center;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.remove-country,
+.add-country {
+  position: absolute;
+  top: calc(50% - 12px);
+  left: -12px;
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -167,30 +193,10 @@
 
 .add-country--exit {
   transform: scale(1);
+  opacity: 1;
 }
 
 .add-country--exit-active {
   transform: scale(0);
   transition: transform 0.5s cubic-bezier(0.87, 0, 0.13, 1);
-}
-
-/* --------------------- */
-/* Country row animation */
-/* --------------------- */
-
-.country--enter,
-.country--appear {
-  opacity: 0;
-  transition: opacity 0.5s, background 1s;
-  background: #717b91;
-}
-
-.country--enter-active,
-.country--appear-active {
-  opacity: 1;
-  background: #252a3d;
-}
-
-.country--enter-done {
-  opacity: 1;
 }

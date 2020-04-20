@@ -13,7 +13,7 @@ class CountryForm extends React.Component {
   onCountryAdd = () => {
     const element = this.countryInputElement.current;
 
-    this.props.addCountry(element, element.value.toLowerCase());
+    this.props.addCountry(element, element.value.toLowerCase().trim());
   }
 
   render() {
