@@ -48,6 +48,9 @@
 .header__item--active::after { opacity: 1; }
 .header__item--low-high::after { transform: translateY(-50%) rotate(180deg); }
 
+.header--unsorted .header__item--active::after { opacity: 0; }
+.header--unsorted .header__item--active span::after { opacity: 0; }
+
 /* Underline */
 
 .header__item--active span { position: relative; }

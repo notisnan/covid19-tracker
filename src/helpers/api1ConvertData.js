@@ -12,6 +12,8 @@ function api1ConvertCountryData(data) {
   // Calculate the recovered per milllion
   // API does not have this stat, needs to be manually calculated
   function getRecoveredPerMillion(population, totalRecovered) {
+    if (isNaN(totalRecovered)) return totalRecovered;
+
     let recoveredPerMillion = 0;
 
     if (population < 1000000) {
@@ -29,6 +31,8 @@ function api1ConvertCountryData(data) {
   // API has tested per million but not total tested
   // We calculate this based on the numbers we have
   function getTestedCount(population, testedPerMillion) {
+    if (isNaN(testedPerMillion)) return testedPerMillion;
+
     let tested = 0;
 
     if (population > 1000000) {
@@ -37,7 +41,7 @@ function api1ConvertCountryData(data) {
     } else {
       // If the country population is less than a million we need a different formula
       const multiple = 1000000/population;
-      tested = testedPerMillion * multiple;
+      tested = testedPerMillion / multiple;
     }
 
     return parseInt(tested);
@@ -47,14 +51,14 @@ function api1ConvertCountryData(data) {
     const population = parseInt(item.cases.split(',').join('')/item.total_cases_per_1m_population.split(',').join('')*1000000);
 
     newCountryData[item.country_name.toLowerCase()] = {
-      cases: Number(item.cases.split(',').join('')),
+      confirmed: Number(item.cases.split(',').join('')),
       deaths: Number(item.deaths.split(',').join('')),
-      total_recovered: Number(item.total_recovered.split(',').join('')),
+      recovered: Number(item.total_recovered.split(',').join('')),
       new_cases: Number(item.new_cases.split(',').join('')),
       new_deaths: Number(item.new_deaths.split(',').join('')),
       title: item.country_name,
-      cases_per_million: Number(item.total_cases_per_1m_population.split(',').join('')),
-      tests_per_million: Number(item.tests_per_1m_population.split(',').join('')),
+      confirmed_per_million: Number(item.total_cases_per_1m_population.split(',').join('')),
+      tested_per_million: Number(item.tests_per_1m_population.split(',').join('')),
       deaths_per_million: Number(item.deaths_per_1m_population.split(',').join('')),
       recovered_per_million: getRecoveredPerMillion(
         population,
@@ -79,18 +83,18 @@ function api1ConvertCountryData(data) {
 
 function api1ConvertWorldData(data) {
   const newWorldData = {
-    cases: Number(data.total_cases.split(',').join('')),
+    confirmed: Number(data.total_cases.split(',').join('')),
     deaths: Number(data.total_deaths.split(',').join('')),
     new_cases: Number(data.new_cases.split(',').join('')),
     new_deaths: Number(data.new_deaths.split(',').join('')),
-    total_recovered: Number(data.total_recovered.split(',').join('')),
+    recovered: Number(data.total_recovered.split(',').join('')),
     title: 'Global',
-    tests_per_million: 0,
-    cases_per_million: Number(data.total_cases_per_1m_population.split(',').join('')),
+    tested_per_million: 'N/A',
+    confirmed_per_million: Number(data.total_cases_per_1m_population.split(',').join('')),
     deaths_per_million: Number(data.deaths_per_1m_population.split(',').join('')),
     recovered_per_million: parseInt(Number(data.total_recovered.split(',').join('')) / parseInt(data.total_cases.split(',').join('')/data.total_cases_per_1m_population.split(',').join(''))),
     population: parseInt(data.total_cases.split(',').join('')/data.total_cases_per_1m_population.split(',').join('')*1000000),
-    tested: 0
+    tested: 'N/A'
   };
 
   return newWorldData;

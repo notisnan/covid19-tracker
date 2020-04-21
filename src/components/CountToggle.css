@@ -33,7 +33,7 @@
 }
 
 .count-toggle-wrapper--million .count-toggle__indicator {
-  transform: translateY(16px);
+  transform: translateY(16px) rotate(-20deg);
 }
 
 /* ------------ */
@@ -53,6 +53,7 @@
   color: #8799d0;
   transition: color 0.2s;
   text-shadow: 0 -1px rgba(0,0,0, 0.2);
+  user-select: none;
 }
 
 .count-labels__item--active {

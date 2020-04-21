@@ -5,7 +5,7 @@
 function getSmallestValue(array, countries) {
   let smallest = array[0];
   for (let countryName of array) {
-    if (countries[smallest].cases > countries[countryName].cases) smallest = countryName;
+    if (countries[smallest].confirmed > countries[countryName].confirmed) smallest = countryName;
   }
   return smallest;
 }
@@ -18,7 +18,7 @@ export default function getTopFourConfirmedCountries(countries) {
   const mostCasesArray = ['botswana', 'botswana', 'botswana', 'botswana'];
   for (let key in countries) {  
     const leastCase = getSmallestValue(mostCasesArray, countries);
-    if (countries[leastCase].cases < countries[key].cases) {
+    if (countries[leastCase].confirmed < countries[key].confirmed) {
       const indexOfLeastCase = mostCasesArray.indexOf(leastCase);
       mostCasesArray[indexOfLeastCase] = countries[key].title.toLowerCase();
     }

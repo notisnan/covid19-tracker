@@ -8,7 +8,7 @@ export default function formatNumber(number) {
   // Handle invalid numbers
   // ----------------------
 
-  if (Number.isNaN(number)) return 'N/A';
+  if (isNaN(number)) return 'N/A';
 
   // ---------------
   // Up to a thousand
