@@ -225,7 +225,7 @@ class App extends React.Component {
         const newUserStorage = {
           countries: getTopFourConfirmedCountries(this.state.countryData)
         };
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, this.state.sort.highLow);
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column || 'confirmed', this.state.sort.highLow);
 
         this.setState({userStorage: newUserStorage});
         chrome.storage.sync.set({ 'userStorage': newUserStorage });
@@ -237,7 +237,7 @@ class App extends React.Component {
         // We manually patch global in for them
         if (!newUserStorage.countries.includes('global')) newUserStorage.countries.push('global');
 
-        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column, this.state.sort.highLow);
+        newUserStorage.countries = this.sortData(newUserStorage.countries, this.state.countryData, this.state.sort.column || 'confirmed', this.state.sort.highLow);
         this.setState({userStorage: newUserStorage});
       }
     });
