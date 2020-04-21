@@ -66,6 +66,8 @@ class CountryRow extends React.Component {
   render() {
     const country = this.props.placeData;
 
+    // console.log(country);
+
     // ------
     // Return
     // ------
@@ -124,15 +126,15 @@ class CountryRow extends React.Component {
         <div className="column column-confirmed">
           <div className="column__info-top" dangerouslySetInnerHTML={{__html:
             (this.props.state.countType === 'total') ?
-              concatNumber(country.cases) :
-              (concatNumber(country.cases_per_million) < 1) ? '<1' : concatNumber(country.cases_per_million)
+              concatNumber(country.confirmed) :
+              (concatNumber(country.confirmed_per_million) < 1) ? '<1' : concatNumber(country.confirmed_per_million)
             }}>
           </div>
           <div className="column__info-bottom">{`
             ${
               (this.props.state.countType === 'total') ?
                 '+' + country.new_cases.toLocaleString('en-US') :
-                this.confirmedPerMillion(country) || 0
+                this.confirmedPerMillion(country)
             }
           `}</div>
         </div>
@@ -154,7 +156,7 @@ class CountryRow extends React.Component {
             {`${
               (this.props.state.countType === 'total') ?
                 '+' + country.new_deaths.toLocaleString('en-US') :
-                this.deathsPerMillion(country) || 0
+                this.deathsPerMillion(country)
             }`}
           </div>
         </div>
@@ -166,8 +168,8 @@ class CountryRow extends React.Component {
         <div className="column column-tested">
           <div className="column__info-top" dangerouslySetInnerHTML={{__html:
             (this.props.state.countType === 'total') ?
-              concatNumber(country.tested || NaN) :
-              concatNumber(country.tests_per_million || NaN)
+              concatNumber(country.tested) :
+              concatNumber(country.tested_per_million)
           }}></div>
           <div className="column__info-bottom"></div>
         </div>
@@ -179,7 +181,7 @@ class CountryRow extends React.Component {
         <div className="column column-recovered">
           <div className="column__info-top" dangerouslySetInnerHTML={{__html:
             (this.props.state.countType === 'total') ?
-              concatNumber(country.total_recovered) :
+              concatNumber(country.recovered) :
               concatNumber(country.recovered_per_million)
           }}></div>
           <div className="column__info-bottom"></div>
