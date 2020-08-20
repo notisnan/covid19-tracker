@@ -37,7 +37,7 @@ Our project uses an API that's hosted on [Rapid API](https://rapidapi.com/), bec
 
 - If you would like to contribute to the project, create or respond to one of the issues letting us know, and we will share the API key with you.
 
-- If you just want to play around with the project locally, you can setup your own API key by following the instructions [here](https://docs.rapidapi.com/docs/keys). We are currently using the [Corona Virus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
+- If you just want to play around with the project locally, you can setup your own API key by following the instructions [here](https://docs.rapidapi.com/docs/keys). We are currently using the [Coronavirus Monitor](https://rapidapi.com/astsiatsko/api/coronavirus-monitor?endpoint=apiendpoint_f48abf8b-68b3-4012-97ee-f0cc72cff406) API.
 
 Once you have your key, you need to create a `headers.js` file within the '/src' folder and add your credentials like this:
 
